@@ -28,7 +28,8 @@ href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,
 	<!-- Page Wrapper -->
 	<div id="wrapper">
 	<!-- Sidebar -->
-	{{ include('admin/dashboard/_partials/_sidebar.html.twig') }}
+{{ include('admin/dashboard/_partials/_sidebar/_sidebar.html.twig') }}
+
 <!-- Content Wrapper -->
 <div
 	id="content-wrapper" class="d-flex flex-column">
@@ -36,7 +37,9 @@ href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,
 	<!-- Main Content -->
 	<div id="content">
 
-{{ include('admin/dashboard/_partials/_nav.html.twig') }}
+{{ include('admin/dashboard/_partials/_nav/_nav.html.twig') }}
+
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
   <!-- Page Heading -->
@@ -47,11 +50,15 @@ href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,
                     </div>
 
 
-{{ include('admin/dashboard/_partials/_blocs.html.twig') }}
+{{ include('admin/dashboard/_partials/_blocs/_blocs.html.twig') }}
+
+
 	
 
 		{% block body %}{% endblock %}
-{{ include('admin/dashboard/_partials/_footer.html.twig') }}
+{{ include('admin/dashboard/_partials/_footer/_footer.html.twig') }}
+
+
 
 		<!-- Bootstrap core JavaScript-->
 {# jQuery et Bootstrap #}
