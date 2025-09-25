@@ -1,0 +1,27 @@
+feat/ — nouvelle fonctionnalité
+
+fix/ — correction de bug
+
+hotfix/ — correction urgente en prod
+
+refactor/ — refacto sans changement fonctionnel
+
+perf/ — amélioration de performance
+
+style/ — formatage, lint, pas de logique (espaces, ;, etc.)
+
+docs/ — documentation uniquement
+
+test/ — ajout/maj de tests
+
+chore/ — tâches diverses (maj deps, scripts, config)
+
+build/ — changements de build/outils/packaging
+
+ci/ — config CI/CD
+
+revert/ — revert d’un changement
+
+spike/ — exploration/POC
+
+wip/ — travail en cours (évite en remote ; préfère draft PR)
