@@ -17,13 +17,16 @@ class AppFixtures extends Fixture
         $admin = new User();
         $admin->setEmail('admin@example.com');
         $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setPseudo('AdminUser');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'Admin@123'));
         $manager->persist($admin);
 
         // 2) EMPLOYER (ROLE_EMLOYER)
         $employer = new User();
         $employer->setEmail('employer@example.com');
-        $employer->setRoles(['ROLE_EMLOYER']); // orthographe voulue
+        $employer->setRoles(['ROLE_EMLOYER']);
+        $employer->setPseudo('EmployerUser');
+
         $employer->setPassword($this->passwordHasher->hashPassword($employer, 'Employer@123'));
         $manager->persist($employer);
 
@@ -31,6 +34,8 @@ class AppFixtures extends Fixture
         $passager = new User();
         $passager->setEmail('passager@example.com');
         $passager->setRoles(['ROLE_PASSAGER']);
+        $passager->setPseudo('PassagerUser');
+
         $passager->setPassword($this->passwordHasher->hashPassword($passager, 'Passager@123'));
         $manager->persist($passager);
 
@@ -38,6 +43,8 @@ class AppFixtures extends Fixture
         $driver = new User();
         $driver->setEmail('driver@example.com');
         $driver->setRoles(['ROLE_DRIVER']);
+        $driver->setPseudo('DriverUser');
+
         $driver->setPassword($this->passwordHasher->hashPassword($driver, 'Driver@123'));
         $manager->persist($driver);
 
