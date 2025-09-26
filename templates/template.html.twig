@@ -15,6 +15,13 @@
 		<link href="{{ asset('dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 		<link href="{{ asset('dashboard/css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+{% block javascripts %}
+	{% block importmap %}
+		{{ importmap('app') }}
+	{% endblock %}
+{% endblock %}
+
 	</head>
 
 	<body id="page-top">
@@ -30,36 +37,33 @@
 
 						{# Contenu de page #}
 
-{{ include('admin/dashboard/_partials/_flash/_flash.html.twig') }}
+						{{ include('admin/dashboard/_partials/_flash/_flash.html.twig') }}
 
 						{% block body %}{% endblock %}
 					</div>
 
 
-
-				{{ include('admin/dashboard/_partials/_footer/_footer.html.twig') }}
+					{{ include('admin/dashboard/_partials/_footer/_footer.html.twig') }}
+				</div>
 			</div>
-		</div>
 
-		{# jQuery et Bootstrap #}
-		 <script src="{{ asset('dashboard/vendor/jquery/jquery.min.js') }}"></script>
-		 <script src="{{ asset('dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+			{# jQuery et Bootstrap #}
+			 <script src="{{ asset('dashboard/vendor/jquery/jquery.min.js') }}"></script>
+			 <script src="{{ asset('dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-		{# Core plugin #}
-		 <script src="{{ asset('dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+			{# Core plugin #}
+			 <script src="{{ asset('dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-		{# SB Admin 2 #}
-		 <script src="{{ asset('dashboard/js/sb-admin-2.min.js') }}"></script>
+			{# SB Admin 2 #}
+			 <script src="{{ asset('dashboard/js/sb-admin-2.min.js') }}"></script>
 
-		{# Chart.js (optionnel) #}
-		 <script src="{{ asset('dashboard/vendor/chart.js/Chart.min.js') }}"></script>
-		 <script src="{{ asset('dashboard/js/demo/chart-area-demo.js') }}"></script>
-		 <script src="{{ asset('dashboard/js/demo/chart-pie-demo.js') }}"></script>
+			{# Chart.js (optionnel) #}
+			 <script src="{{ asset('dashboard/vendor/chart.js/Chart.min.js') }}"></script>
+			 <script src="{{ asset('dashboard/js/demo/chart-area-demo.js') }}"></script>
+			 <script src="{{ asset('dashboard/js/demo/chart-pie-demo.js') }}"></script>
 
-		 <script src="{{ asset('dashboard/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-		 <script src="{{ asset('dashboard/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
-		{% block javascripts %}
-	{% endblock %}
+			 <script src="{{ asset('dashboard/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+			 <script src="{{ asset('dashboard/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+	</body>
 </body></html>
 
