@@ -17,27 +17,64 @@ class AppFixtures extends Fixture
     {
         $faker = FakerFactory::create('fr_FR');
 
+        // Petite fonction utilitaire pour une adresse sur une seule ligne
+        $oneLineAddress = function () use ($faker): string {
+            // $faker->address peut contenir des sauts de ligne : on aplati
+            return preg_replace('/\s+/', ' ', $faker->streetAddress . ' ' . $faker->postcode . ' ' . $faker->city);
+        };
+
+        // Génère une date de naissance entre 18 et 60 ans
+        $randomBirthDate = function (): \DateTimeImmutable {
+            $dt = \DateTimeImmutable::createFromMutable(
+                (new \DateTime())->sub(new \DateInterval('P' . random_int(18, 60) . 'Y'))
+            );
+            // On peut aussi utiliser Faker si tu préfères :
+            // \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-60 years','-18 years'))
+            return $dt;
+        };
+
         // 1) ADMIN
         $admin = new User();
         $admin->setEmail('admin@example.com');
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setPseudo('AdminUser');
+        $admin->setFirstName($faker->firstName());
+        $admin->setLastName($faker->lastName());
+        $admin->setPhone($faker->phoneNumber());
+        $admin->setAddress($oneLineAddress());
+        $admin->setDateOfBirth(\DateTimeImmutable::createFromMutable(
+            $faker->dateTimeBetween('-60 years', '-25 years')
+        ));
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'Admin@123'));
         $manager->persist($admin);
 
-        // 2) EMPLOYER (ROLE_EMLOYER)
+        // 2) EMPLOYER
         $employer = new User();
         $employer->setEmail('employer@example.com');
-        $employer->setRoles(['ROLE_EMLOYER']);
+        $employer->setRoles(['ROLE_EMPLOYER']); // <-- corrige si besoin
         $employer->setPseudo('EmployerUser');
+        $employer->setFirstName($faker->firstName());
+        $employer->setLastName($faker->lastName());
+        $employer->setPhone($faker->phoneNumber());
+        $employer->setAddress($oneLineAddress());
+        $employer->setDateOfBirth(\DateTimeImmutable::createFromMutable(
+            $faker->dateTimeBetween('-55 years', '-20 years')
+        ));
         $employer->setPassword($this->passwordHasher->hashPassword($employer, 'Employer@123'));
         $manager->persist($employer);
 
-        // 3) PASSAGER (ROLE_PASSAGER)
+        // 3) PASSAGER
         $passager = new User();
         $passager->setEmail('passager@example.com');
         $passager->setRoles(['ROLE_PASSAGER']);
         $passager->setPseudo('PassagerUser');
+        $passager->setFirstName($faker->firstName());
+        $passager->setLastName($faker->lastName());
+        $passager->setPhone($faker->phoneNumber());
+        $passager->setAddress($oneLineAddress());
+        $passager->setDateOfBirth(\DateTimeImmutable::createFromMutable(
+            $faker->dateTimeBetween('-50 years', '-18 years')
+        ));
         $passager->setPassword($this->passwordHasher->hashPassword($passager, 'Passager@123'));
         $manager->persist($passager);
 
@@ -58,6 +95,13 @@ class AppFixtures extends Fixture
             $driver->setEmail(sprintf('driver%d@example.com', $d));
             $driver->setRoles(['ROLE_DRIVER']);
             $driver->setPseudo(sprintf('DriverUser%d', $d));
+            $driver->setFirstName($faker->firstName());
+            $driver->setLastName($faker->lastName());
+            $driver->setPhone($faker->phoneNumber());
+            $driver->setAddress($oneLineAddress());
+            $driver->setDateOfBirth(\DateTimeImmutable::createFromMutable(
+                $faker->dateTimeBetween('-55 years', '-20 years')
+            ));
             $driver->setPassword($this->passwordHasher->hashPassword($driver, 'Driver@123'));
             $manager->persist($driver);
 
@@ -74,12 +118,8 @@ class AppFixtures extends Fixture
                 $date = \DateTimeImmutable::createFromMutable(
                     $faker->dateTimeBetween('-10 years', '-1 month')
                 );
-                if (method_exists($v, 'setFirstRegistrationAt')) {
-                    $v->setFirstRegistrationAt($date);
-                } else {
-                    $v->setFirstRegistrationAt($date);
-                }
 
+                $v->setFirstRegistrationAt($date);
                 $v->setBrand($pick['brand']);
                 $v->setModel($faker->randomElement($pick['models']));
                 $v->setSeats($faker->numberBetween(4, 9));

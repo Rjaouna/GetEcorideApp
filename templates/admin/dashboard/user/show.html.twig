@@ -1,0 +1,175 @@
+{# templates/admin/dashboard/user/show.html.twig #}
+{% extends 'template.html.twig' %}
+
+{% block title %}Détails utilisateur
+{% endblock %}
+
+{% block body %}
+	<div
+		class="row">
+		{# Carte principale #}
+		<div class="col-lg-8 mb-4">
+			<div class="card shadow">
+				<div class="card-header py-3 d-flex justify-content-between align-items-center">
+					<h6 class="m-0 font-weight-bold text-primary">
+						<i class="fas fa-user"></i>
+						Détails de l’utilisateur
+					</h6>
+
+					{# Badges rapides (ex: nombre de rôles) #}
+					<div class="d-flex align-items-center">
+						<span class="badge badge-pill badge-info mr-1">
+							{{ user.roles|default([])|length }}
+							rôle{{ user.roles|length > 1 ? 's' : '' }}
+						</span>
+					</div>
+				</div>
+
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Email</div>
+							<div class="h5 mb-0 font-weight-bold text-gray-900">
+								<i class="fas fa-envelope"></i>
+								{{ user.email }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Pseudo</div>
+							<div class="h5 mb-0">
+								{{ user.pseudo ?? '—' }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Prénom</div>
+							<div class="h6 mb-0">{{ user.firstName ?? '—' }}</div>
+						</div>
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Nom</div>
+							<div class="h6 mb-0">{{ user.lastName ?? '—' }}</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Téléphone</div>
+							<div class="h6 mb-0">{{ user.phone ?? '—' }}</div>
+						</div>
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Date de naissance</div>
+							<div class="h6 mb-0">
+								{{ user.dateOfBirth ? user.dateOfBirth|date('d/m/Y') : '—' }}
+							</div>
+						</div>
+
+						<div class="col-12 mb-3">
+							<div class="small text-muted">Adresse</div>
+							<div class="h6 mb-0">{{ user.address ?? '—' }}</div>
+						</div>
+
+						<div class="col-12 mb-2">
+							<div class="small text-muted mb-1">Rôles</div>
+							{% set roleLabels = {
+              'ROLE_ADMIN': 'Admin',
+              'ROLE_MANAGER': 'Manager',
+              'ROLE_EMPLOYER': 'Employer',
+              'ROLE_DRIVER': 'Driver',
+              'ROLE_PASSAGER': 'Passager',
+              'ROLE_USER': 'Utilisateur'
+            } %}
+							{% for r in user.roles|default([]) %}
+								{% set label = roleLabels[r]|default(r) %}
+								<span class="badge badge-primary mr-1 mb-1">{{ label }}</span>
+							{% else %}
+								<span class="badge badge-secondary">Aucun</span>
+							{% endfor %}
+						</div>
+
+						{% if user.imageName is defined and user.imageName %}
+							<div class="col-12 mt-2">
+								<div class="small text-muted">Avatar</div>
+								{# Adapte le chemin si besoin (VichUploader, etc.) #}
+								<img src="{{ asset(user.imageName starts with '/' ? user.imageName : '/uploads/' ~ user.imageName) }}" alt="Avatar" class="img-thumbnail" style="max-height:140px">
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="card-footer d-flex justify-content-between">
+					<small class="text-muted">
+						<i class="far fa-id-badge"></i>
+						ID :
+						{{ user.id }}
+					</small>
+					<small class="text-muted">
+						<i class="far fa-clock"></i>
+						Créé le :
+						{{ user.createdAt ? user.createdAt|date('d/m/Y H:i') : '—' }}
+					</small>
+					<small class="text-muted">
+						<i class="far fa-edit"></i>
+						MAJ :
+						{{ user.updatedAt ? user.updatedAt|date('d/m/Y H:i') : '—' }}
+					</small>
+				</div>
+			</div>
+		</div>
+
+		{# Carte “Résumé rapide” #}
+		<div class="col-lg-4 mb-4">
+			<div class="card border-left-info shadow h-100 py-2">
+				<div class="card-body">
+					<div class="text-xs font-weight-bold text-info text-uppercase mb-3">
+						<i class="fas fa-info-circle"></i>
+						Résumé
+					</div>
+
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Email
+							<span class="badge badge-light">{{ user.email }}</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Pseudo
+							<span class="badge badge-light">{{ user.pseudo ?? '—' }}</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Nom complet
+							<span class="badge badge-light">
+								{{ [user.firstName, user.lastName]|filter(v => v)|join(' ') ?: '—' }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Téléphone
+							<span class="badge badge-light">{{ user.phone ?? '—' }}</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Rôles
+							<span>
+								{% for r in user.roles|default([]) %}
+									<span class="badge badge-primary mr-1">{{ roleLabels[r]|default(r) }}</span>
+								{% else %}
+									<span class="badge badge-secondary">—</span>
+								{% endfor %}
+							</span>
+						</li>
+					</ul>
+
+					<div class="mt-3 d-flex">
+						<a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning btn-sm mr-2">
+							<i class="fas fa-edit"></i>
+							Modifier
+						</a>
+						<a href="{{ path('app_user_index') }}" class="btn btn-light btn-sm mr-2">
+							<i class="fas fa-list"></i>
+							Liste
+						</a>
+						{# Formulaire de suppression #}
+						{{ include('admin/dashboard/user/_delete_form.html.twig') }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

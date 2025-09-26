@@ -1,0 +1,22 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+<div class="card shadow mb-4">
+	<div class="card-header py-3 d-flex justify-content-between align-items-center">
+		<h6 class="m-0 font-weight-bold text-primary">
+			Modifier un utilisateur
+		</h6>
+	</div>
+	<div class="card-body">
+
+
+    {{ include('admin/dashboard/user/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_user_index') }}">back to list</a>
+
+</div>
+
+
+{% endblock %}

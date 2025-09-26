@@ -1,0 +1,100 @@
+{# templates/admin/dashboard/user/_form.html.twig #}
+{{ form_start(form, { attr: { class: 'user' } }) }}
+
+{# Erreurs globales du formulaire #}
+{% if not form.vars.valid %}
+	<div class="alert alert-danger">
+		{{ form_errors(form) }}
+	</div>
+{% endif %}
+
+{# Pseudo / Email #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.pseudo, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Pseudo' }
+        }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.email, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Email' }
+        }) }}
+	</div>
+</div>
+
+{# FirstName / LastName #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.firstName, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Prénom' }
+        }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.lastName, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Nom' }
+        }) }}
+	</div>
+</div>
+
+{# Phone / Address #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.phone, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Téléphone' }
+        }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.address, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Adresse' }
+        }) }}
+	</div>
+</div>
+
+{# DateOfBirth / Password #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.dateOfBirth, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Date de naissance' }
+        }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.password, {
+            label: false,
+            attr: { class: 'form-control form-control-user', placeholder: 'Mot de passe' }
+        }) }}
+	</div>
+</div>
+
+{# Roles (expanded=true => plusieurs cases à cocher) #}
+<div class="form-group">
+	<div class="mb-2">
+		<strong>Rôles</strong>
+	</div>
+
+	{# Erreurs du champ roles #}
+	{{ form_errors(form.roles) }}
+
+	<div class="d-flex flex-wrap">
+		{% for roleField in form.roles %}
+			<div class="custom-control custom-checkbox small mr-4 mb-2">
+				{{ form_widget(roleField, { attr: { class: 'custom-control-input' } }) }}
+				{{ form_label(roleField, null, { label_attr: { class: 'custom-control-label' } }) }}
+				{{ form_errors(roleField) }}
+			</div>
+		{% endfor %}
+	</div>
+</div>
+
+<button type="submit" class="btn btn-primary btn-user btn-block">
+	{{ button_label|default(form.vars.value.id is defined and form.vars.value.id ? 'Mettre à jour l’utilisateur' : 'Enregistrer l’utilisateur') }}
+</button>
+
+{{ form_end(form) }}
+
