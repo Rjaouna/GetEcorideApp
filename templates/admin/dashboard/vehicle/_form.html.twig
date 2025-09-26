@@ -1,0 +1,60 @@
+{# templates/admin/dashboard/vehicle/_form.html.twig #}
+{{ form_start(form, { attr: { class: 'user' } }) }}
+
+
+{# Affiche les erreurs globales du formulaire #}
+{% if not form.vars.valid %}
+	<div class="alert alert-danger">
+		{{ form_errors(form) }}
+	</div>
+{% endif %}
+
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.plateNumber, { label: false, attr: { class: 'form-control form-control-user', placeholder: 'Immatriculation' } }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.firstRegistrationAt, { label: false, attr: { class: 'form-control form-control-user', placeholder: '1ère mise en circulation' } }) }}
+	</div>
+</div>
+
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.brand, { label: false, attr: { class: 'form-control form-control-user', placeholder: 'Marque' } }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.model, { label: false, attr: { class: 'form-control form-control-user', placeholder: 'Modèle' } }) }}
+	</div>
+</div>
+
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.seats, { label: false, attr: { class: 'form-control form-control-user', placeholder: 'Nombre de sièges' } }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.owner, { label: false, attr: { class: 'form-control form-control-user' } }) }}
+	</div>
+</div>
+
+<div class="form-group row">
+	<div class="col-sm-6 mb-2">
+		<div class="custom-control custom-checkbox small">
+			{{ form_widget(form.isElectric, { attr: { class: 'custom-control-input' } }) }}
+			{{ form_label(form.isElectric, null, { label_attr: { class: 'custom-control-label' } }) }}
+			{{ form_errors(form.isElectric) }}
+		</div>
+	</div>
+	<div class="col-sm-6 mb-2">
+		<div class="custom-control custom-checkbox small">
+			{{ form_widget(form.isActive, { attr: { class: 'custom-control-input' } }) }}
+			{{ form_label(form.isActive, null, { label_attr: { class: 'custom-control-label' } }) }}
+			{{ form_errors(form.isActive) }}
+		</div>
+	</div>
+</div>
+
+<button type="submit" class="btn btn-primary btn-user btn-block">
+	{{ button_label|default(form.vars.value.id is defined and form.vars.value.id ? 'Mettre à jour le véhicule' : 'Enregistrer le véhicule') }}
+</button>
+{{ form_end(form) }}
+

@@ -1,84 +1,65 @@
 <!DOCTYPE html>
 <html>
 	<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="">
-<meta name="author" content="">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title>SB Admin 2 - Dashboard</title>
+		<title>SB Admin 2 - Dashboard</title>
 
-<!-- Custom fonts for this template-->
-<link href="{{ asset('dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+		{# DataTables CSS #}
+		<link
+		href="{{ asset('dashboard/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
-
-<link
-href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-<!-- Custom styles for this template-->
-<link href="{{ asset('dashboard/css/sb-admin-2.min.css') }}" rel="stylesheet">
-
-
-
+		{# Fonts & SB Admin CSS #}
+		<link href="{{ asset('dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+		<link href="{{ asset('dashboard/css/sb-admin-2.min.css') }}" rel="stylesheet">
 	</head>
-<body
-	id="page-top">
 
-	<!-- Page Wrapper -->
-	<div id="wrapper">
-	<!-- Sidebar -->
-{{ include('admin/dashboard/_partials/_sidebar/_sidebar.html.twig') }}
+	<body id="page-top">
+		<div id="wrapper">
+			{{ include('admin/dashboard/_partials/_sidebar/_sidebar.html.twig') }}
 
-<!-- Content Wrapper -->
-<div
-	id="content-wrapper" class="d-flex flex-column">
+			<div id="content-wrapper" class="d-flex flex-column">
+				<div id="content">
+					{{ include('admin/dashboard/_partials/_nav/_nav.html.twig') }}
 
-	<!-- Main Content -->
-	<div id="content">
+					<div class="container-fluid">
+						{{ include('admin/dashboard/_partials/_blocs/_blocs.html.twig') }}
 
-{{ include('admin/dashboard/_partials/_nav/_nav.html.twig') }}
+						{# Contenu de page #}
 
+{{ include('admin/dashboard/_partials/_flash/_flash.html.twig') }}
 
-<!-- Begin Page Content -->
-<div class="container-fluid">
-  <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                    </div>
-
-
-{{ include('admin/dashboard/_partials/_blocs/_blocs.html.twig') }}
-
-
-	
-
-		{% block body %}{% endblock %}
-{{ include('admin/dashboard/_partials/_footer/_footer.html.twig') }}
+						{% block body %}{% endblock %}
+					</div>
 
 
 
-		<!-- Bootstrap core JavaScript-->
-{# jQuery et Bootstrap #}
- <script src="{{ asset('dashboard/vendor/jquery/jquery.min.js') }}"></script>
- <script src="{{ asset('dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+				{{ include('admin/dashboard/_partials/_footer/_footer.html.twig') }}
+			</div>
+		</div>
 
-{# Core plugin JavaScript #}
- <script src="{{ asset('dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+		{# jQuery et Bootstrap #}
+		 <script src="{{ asset('dashboard/vendor/jquery/jquery.min.js') }}"></script>
+		 <script src="{{ asset('dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-{# Scripts custom SB Admin 2 #}
- <script src="{{ asset('dashboard/js/sb-admin-2.min.js') }}"></script>
+		{# Core plugin #}
+		 <script src="{{ asset('dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-{# Plugins de page #}
- <script src="{{ asset('dashboard/vendor/chart.js/Chart.min.js') }}"></script>
+		{# SB Admin 2 #}
+		 <script src="{{ asset('dashboard/js/sb-admin-2.min.js') }}"></script>
 
-{# Scripts custom de page #}
- <script src="{{ asset('dashboard/js/demo/chart-area-demo.js') }}"></script>
- <script src="{{ asset('dashboard/js/demo/chart-pie-demo.js') }}"></script>
+		{# Chart.js (optionnel) #}
+		 <script src="{{ asset('dashboard/vendor/chart.js/Chart.min.js') }}"></script>
+		 <script src="{{ asset('dashboard/js/demo/chart-area-demo.js') }}"></script>
+		 <script src="{{ asset('dashboard/js/demo/chart-pie-demo.js') }}"></script>
 
+		 <script src="{{ asset('dashboard/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+		 <script src="{{ asset('dashboard/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
-	</body>
-</html>
+		{% block javascripts %}
+	{% endblock %}
+</body></html>
 
