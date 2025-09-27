@@ -48,11 +48,11 @@ class AppFixtures extends Fixture
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'Admin@123'));
         $manager->persist($admin);
 
-        // 2) EMPLOYER
+        // 2) EMPLOYE
         $employer = new User();
-        $employer->setEmail('employer@example.com');
-        $employer->setRoles(['ROLE_EMPLOYER']); // <-- corrige si besoin
-        $employer->setPseudo('EmployerUser');
+        $employer->setEmail('employe@example.com');
+        $employer->setRoles(['ROLE_EMPLOYE']); // <-- corrige si besoin
+        $employer->setPseudo('EmployeUser');
         $employer->setFirstName($faker->firstName());
         $employer->setLastName($faker->lastName());
         $employer->setPhone($faker->phoneNumber());
@@ -60,7 +60,7 @@ class AppFixtures extends Fixture
         $employer->setDateOfBirth(\DateTimeImmutable::createFromMutable(
             $faker->dateTimeBetween('-55 years', '-20 years')
         ));
-        $employer->setPassword($this->passwordHasher->hashPassword($employer, 'Employer@123'));
+        $employer->setPassword($this->passwordHasher->hashPassword($employer, 'Employe@123'));
         $manager->persist($employer);
 
         // 3) PASSAGER
