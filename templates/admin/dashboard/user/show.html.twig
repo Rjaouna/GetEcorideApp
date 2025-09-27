@@ -163,7 +163,17 @@
 						<a href="{{ path('app_user_index') }}" class="btn btn-light btn-sm mr-2">
 							<i class="fas fa-list"></i>
 							Liste
-						</a>
+</a>
+
+<form method="post" action="{{ path('admin_user_toggle', {id: user.id}) }}" onsubmit="return confirm('{{ user.isLocked ? 'Débloquer' : 'Bloquer' }} cet utilisateur ?');">
+
+	<input type="hidden" name="_token" value="{{ csrf_token('user_toggle_' ~ user.id) }}">
+	<button class="btn {{ user.isLocked ? 'btn-success' : 'btn-danger' }}">
+		{{ user.isLocked ? 'Débloquer' : 'Bloquer' }}
+	</button>
+</form>
+
+
 						{# Formulaire de suppression #}
 						{{ include('admin/dashboard/user/_delete_form.html.twig') }}
 					</div>

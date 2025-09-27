@@ -6,10 +6,11 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/dashboard/user')]
 final class UserController extends AbstractController
@@ -48,6 +49,40 @@ final class UserController extends AbstractController
         return $this->render('admin/dashboard/user/show.html.twig', [
             'user' => $user,
         ]);
+    }
+
+    #[Route('/{id}/toggle', name: 'admin_user_toggle', methods: ['POST'])]
+    public function toggle(
+        User $user,
+        Request $request,
+        EntityManagerInterface $em,
+        Security $security
+    ): Response {
+        // Autorisations (à adapter : ROLE_ADMIN ou voter)
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        // CSRF
+        if (!$this->isCsrfTokenValid('user_toggle_' . $user->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        // Option : empêcher de se bloquer soi-même
+        if ($security->getUser() && $security->getUser()->getId() === $user->getId()) {
+            $this->addFlash('warning', 'Vous ne pouvez pas vous bloquer vous-même.');
+            return $this->redirectToRoute('admin_user_show', ['id' => $user->getId()]);
+        }
+
+        // Toggle + persist
+        $user->setIsLocked(!$user->isLocked());
+        $em->flush();
+
+        $this->addFlash(
+            $user->isLocked() ? 'warning' : 'success',
+            $user->isLocked() ? 'Utilisateur bloqué avec succès.' : 'Utilisateur débloqué avec succès.'
+        );
+
+        // PRG
+        return $this->redirectToRoute('app_user_show', ['id' => $user->getId()]);
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
