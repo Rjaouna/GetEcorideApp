@@ -75,6 +75,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Vehicle::class, mappedBy: 'owner')]
     private Collection $vehicles;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isLocked = null;
+
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
@@ -279,6 +282,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $vehicle->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isLocked(): ?bool
+    {
+        return $this->isLocked;
+    }
+
+    public function setIsLocked(?bool $isLocked): static
+    {
+        $this->isLocked = $isLocked;
 
         return $this;
     }
