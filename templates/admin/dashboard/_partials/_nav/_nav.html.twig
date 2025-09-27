@@ -140,9 +140,18 @@
 
 
 			<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-<span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ app.user.pseudo }}</span>
+<span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ app.user ? app.user.pseudo : '' }}
+
+</span>
+
+
+{% if app.user %}
+
 
 <img class="img-profile rounded-circle" src="{{ app.user.imageName ? asset('uploads/avatars/' ~ user.imageName) : asset('assets/images/profile/profil-avatar-homme.jpg') }}" alt="Avatar"/>
+{% endif %}
+
+
 
 
 

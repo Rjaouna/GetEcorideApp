@@ -12,14 +12,14 @@
 <div class="form-group row">
 	<div class="col-sm-6 mb-3 mb-sm-0">
 		{{ form_row(form.pseudo, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Pseudo' }
+            label: 'Pseudo',
+            attr: { class: 'form-control form-control-user' }
         }) }}
 	</div>
 	<div class="col-sm-6">
 		{{ form_row(form.email, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Email' }
+            label: 'Adresse email',
+            attr: { class: 'form-control form-control-user' }
         }) }}
 	</div>
 </div>
@@ -28,14 +28,14 @@
 <div class="form-group row">
 	<div class="col-sm-6 mb-3 mb-sm-0">
 		{{ form_row(form.firstName, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Prénom' }
+            label: 'Prénom',
+            attr: { class: 'form-control form-control-user' }
         }) }}
 	</div>
 	<div class="col-sm-6">
 		{{ form_row(form.lastName, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Nom' }
+            label: 'Nom',
+            attr: { class: 'form-control form-control-user' }
         }) }}
 	</div>
 </div>
@@ -44,14 +44,14 @@
 <div class="form-group row">
 	<div class="col-sm-6 mb-3 mb-sm-0">
 		{{ form_row(form.phone, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Téléphone' }
+            label: 'Téléphone',
+            attr: { class: 'form-control form-control-user' }
         }) }}
 	</div>
 	<div class="col-sm-6">
 		{{ form_row(form.address, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Adresse' }
+            label: 'Adresse',
+            attr: { class: 'form-control form-control-user'}
         }) }}
 	</div>
 </div>
@@ -60,15 +60,20 @@
 <div class="form-group row">
 	<div class="col-sm-6 mb-3 mb-sm-0">
 		{{ form_row(form.dateOfBirth, {
-            label: false,
-            attr: { class: 'form-control form-control-user', placeholder: 'Date de naissance' }
+            label: 'Date de naissance',
+            attr: { class: 'form-control form-control-user' }
         }) }}
 	</div>
+
 	<div class="col-sm-6">
+{% if form.password is defined %}
+
 		{{ form_row(form.password, {
-            label: false,
+            label: 'Mot de passe',
             attr: { class: 'form-control form-control-user', placeholder: 'Mot de passe' }
         }) }}
+{% endif %}
+
 	</div>
 </div>
 
