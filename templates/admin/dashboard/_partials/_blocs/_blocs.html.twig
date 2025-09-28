@@ -28,13 +28,22 @@
 			<div class="card-body">
 				<div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-						<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-							Earnings (Annual)</div>
-						<div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+						<div class="text-xs font-weight-bold text-danger  text-uppercase mb-1">
+							Compte utilisateur (bloqués)</div>
+<div class="h5 mb-0 font-weight-bold text-warning " id="lockedAccountes" data-endpoint="{{ path('admin_user_locked_accounts') }}">
+	0
+</div>
+
+<div id="lockedAccountsList"></div>
+
+ <script src="{{ asset('js/lockedAccounts.js') }}"></script>
+
+
+
+
+
 					</div>
-					<div class="col-auto">
-						<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -85,7 +94,10 @@
 		</div>
 	</div>
 </div>
+ <script src="{{ asset('js/lockedAccounte.js') }}"></script>
+
  <script src="{{ asset('js/userRoleStats.js') }}"></script>
+
 
 
 

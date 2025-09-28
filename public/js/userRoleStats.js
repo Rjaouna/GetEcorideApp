@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const el = document.getElementById("role-stats");
     if (!el) return;
 
-    const endpoint =
-        el.getAttribute("data-endpoint") || "/admin/users/stats/roles";
+    const endpoint = el.getAttribute("data-endpoint");
 
     // Optionnel : spinner simple pendant le chargement
     el.innerHTML = `
@@ -33,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         // Util classes compat Bootstrap 4/5
-        const gapEnd = "me-2"; // si tu es en BS4, remplace par "mr-2"
+        const gapEnd = "me-2";
 
         const rows = Object.entries(byRole)
             .map(([roleLabel, countRaw]) => {
@@ -42,8 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ? Math.min(100, Math.round((count * 100) / total))
                     : 0;
 
-                // Si tes labels sont "Role admin" et que tu veux colorer par code, essaye d'en déduire le code :
-                // ex: label "Role admin" -> code "ROLE_ADMIN" (si tu as ce mapping côté serveur, c'est encore mieux)
                 const roleCodeGuess = roleLabel
                     .toUpperCase()
                     .replace(/\s+/g, "_"); // ex: "Role admin" -> "ROLE_ADMIN"

@@ -9,11 +9,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/admin/dashboard/user')]
+#[Route('/dashboard/user')]
 final class UserController extends AbstractController
 {
     #[Route(name: 'app_user_index', methods: ['GET'])]
@@ -25,20 +24,13 @@ final class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('password')->getData();
-            if (!empty($plainPassword)) {
-                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                $user->setPassword($hashedPassword);
-            }
-            $user->setCreatedBy($this->getUser());
-            $user->setUpdatedBy($this->getUser());
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -66,7 +58,6 @@ final class UserController extends AbstractController
         EntityManagerInterface $em,
         Security $security
     ): Response {
-        // Autorisations (à adapter : ROLE_ADMIN ou voter)
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         // CSRF
@@ -74,13 +65,13 @@ final class UserController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        // Option : empêcher de se bloquer soi-même
+        // empêcher de se bloquer soi-même
         if ($security->getUser() && $security->getUser()->getId() === $user->getId()) {
             $this->addFlash('warning', 'Vous ne pouvez pas vous bloquer vous-même.');
             return $this->redirectToRoute('admin_user_show', ['id' => $user->getId()]);
         }
 
-        // Toggle + persist
+        // Toggle
         $user->setIsLocked(!$user->isLocked());
         $em->flush();
 
@@ -96,11 +87,10 @@ final class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user, ['include_password' => false]);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setUpdatedBy($this->getUser());
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
