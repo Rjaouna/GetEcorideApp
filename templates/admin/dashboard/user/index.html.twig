@@ -55,8 +55,9 @@
 						{{ user.createdAt ? user.createdAt|date('d/m/Y H:i') : '' }}
 					</td>
 					<td class="text-nowrap">
-						<a class="btn btn-sm btn-outline-primary" href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-						<a class="btn btn-sm btn-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+<a class="btn btn-sm btn-outline-primary" href="{{ path('app_user_show', {'uuid': user.uuid}) }}">show</a>
+
+
 					</td>
 				</tr>
 			{% else %}

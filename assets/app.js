@@ -1,3 +1,6 @@
+// Stimulus (importmap)
+import { Application } from "@hotwired/stimulus";
+window.Stimulus = Application.start();
 /*
  * Welcome to your app's main JavaScript file!
  *

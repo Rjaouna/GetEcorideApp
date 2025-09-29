@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\Traits\TimestampableTrait;
+use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -77,6 +78,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?bool $isLocked = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -294,6 +298,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsLocked(?bool $isLocked): static
     {
         $this->isLocked = $isLocked;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

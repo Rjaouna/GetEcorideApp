@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39ce40651e33862d3a25bf9a145c0afa",
+    "content-hash": "47a5de63cbfac50e00f3bc0413bb7e45",
     "packages": [
         {
             "name": "brick/math",
@@ -2182,90 +2182,6 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.9.1"
             },
             "time": "2025-09-04T20:59:21+00:00"
-        },
-        {
-            "name": "ramsey/uuid-doctrine",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ramsey/uuid-doctrine.git",
-                "reference": "491e1bfa4d9d81e52a60470fa92c871f7eef919e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid-doctrine/zipball/491e1bfa4d9d81e52a60470fa92c871f7eef919e",
-                "reference": "491e1bfa4d9d81e52a60470fa92c871f7eef919e",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "^2.8 || ^3.0 || ^4.0",
-                "php": "^8.1",
-                "ramsey/uuid": "^3.9.7 || ^4.0"
-            },
-            "require-dev": {
-                "captainhook/plugin-composer": "^5.3",
-                "doctrine/orm": "^2.5 || ^3.0",
-                "ergebnis/composer-normalize": "^2.28.3",
-                "mockery/mockery": "^1.5",
-                "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpcsstandards/phpcsutils": "^1.0.0-alpha4",
-                "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan": "^1.9",
-                "phpstan/phpstan-mockery": "^1.1",
-                "phpstan/phpstan-phpunit": "^1.3",
-                "phpunit/phpunit": "^10.5",
-                "ramsey/coding-standard": "^2.0.3",
-                "ramsey/conventional-commits": "^1.3"
-            },
-            "type": "library",
-            "extra": {
-                "captainhook": {
-                    "force-install": true
-                },
-                "ramsey/conventional-commits": {
-                    "configFile": "conventional-commits.json"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ramsey\\Uuid\\Doctrine\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
-                }
-            ],
-            "description": "Use ramsey/uuid as a Doctrine field type.",
-            "keywords": [
-                "database",
-                "doctrine",
-                "guid",
-                "identifier",
-                "uuid"
-            ],
-            "support": {
-                "issues": "https://github.com/ramsey/uuid-doctrine/issues",
-                "source": "https://github.com/ramsey/uuid-doctrine/tree/2.1.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/ramsey",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ramsey/uuid-doctrine",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-05-27T00:00:21+00:00"
         },
         {
             "name": "symfony/asset",
@@ -5755,6 +5671,89 @@
             "time": "2025-06-24T13:30:11+00:00"
         },
         {
+            "name": "symfony/polyfill-uuid",
+            "version": "v1.33.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-uuid.git",
+                "reference": "21533be36c24be3f4b1669c4725c7d1d2bab4ae2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-uuid/zipball/21533be36c24be3f4b1669c4725c7d1d2bab4ae2",
+                "reference": "21533be36c24be3f4b1669c4725c7d1d2bab4ae2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "provide": {
+                "ext-uuid": "*"
+            },
+            "suggest": {
+                "ext-uuid": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Uuid\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for uuid functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "uuid"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.33.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-09-09T11:45:10+00:00"
+        },
+        {
             "name": "symfony/process",
             "version": "v7.3.3",
             "source": {
@@ -7387,6 +7386,80 @@
                 }
             ],
             "time": "2025-08-28T09:38:04+00:00"
+        },
+        {
+            "name": "symfony/uid",
+            "version": "v7.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/uid.git",
+                "reference": "a69f69f3159b852651a6bf45a9fdd149520525bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/uid/zipball/a69f69f3159b852651a6bf45a9fdd149520525bb",
+                "reference": "a69f69f3159b852651a6bf45a9fdd149520525bb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/polyfill-uuid": "^1.15"
+            },
+            "require-dev": {
+                "symfony/console": "^6.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Uid\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an object-oriented API to generate and represent UIDs",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "UID",
+                "ulid",
+                "uuid"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/uid/tree/v7.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-06-27T19:55:54+00:00"
         },
         {
             "name": "symfony/ux-turbo",

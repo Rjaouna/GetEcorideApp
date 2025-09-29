@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -43,11 +44,16 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    #[Route('/{uuid}', name: 'app_user_show', requirements: ['uuid' => '[0-9a-fA-F-]{36}'], methods: ['GET'])]
+    public function show(string $uuid, UserRepository $repo): Response
     {
+        $user = $repo->findOneBy(['uuid' => $uuid]);
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur introuvable.');
+        }
+
         return $this->render('admin/dashboard/user/show.html.twig', [
-            'user' => $user,
+            'user' => $user, // passe l'objet entier, pas juste l'UUID
         ]);
     }
 

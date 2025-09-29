@@ -6,6 +6,7 @@ use App\Entity\Base\AbstractEntity;
 use App\Repository\VehicleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: VehicleRepository::class)]
 class Vehicle extends AbstractEntity
@@ -39,6 +40,9 @@ class Vehicle extends AbstractEntity
 
     #[ORM\Column(nullable: true)]
     private ?bool $isActive = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function getId(): ?int
     {
@@ -137,6 +141,18 @@ class Vehicle extends AbstractEntity
     public function setIsActive(?bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }
