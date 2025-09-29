@@ -1,0 +1,132 @@
+{# templates/pages/contact/index.html.twig #}
+{% extends 'template.html.twig' %}
+
+{% block title %}Contact
+{% endblock %}
+
+{% block body %}
+	<div class="card shadow">
+		<div class="card-header">
+			<h5 class="m-0">Contact</h5>
+		</div>
+		<div
+			class="card-body">
+
+			<!-- Zone d’alertes -->
+			<div id="contact-alerts"></div>
+
+			{# Le helper génère l’input _token et les bons name="contact[...]" #}
+			{{ form_start(form, {
+      action: path('contact_submit'),
+      attr: {
+        id: 'contactForm',
+        novalidate: 'novalidate'
+      }
+    }) }}
+
+			<div class="form-group mb-3">
+				{{ form_label(form.fullName) }}
+				{{ form_widget(form.fullName, {attr: {class: 'form-control', required: true, autofocus: true}}) }}
+				<div class="invalid-feedback d-block" data-error-for="fullName"></div>
+			</div>
+
+			<div class="form-group mb-3">
+				{{ form_label(form.email) }}
+				{{ form_widget(form.email, {attr: {class: 'form-control', required: true}}) }}
+				<div class="invalid-feedback d-block" data-error-for="email"></div>
+			</div>
+
+			<div class="form-group mb-4">
+				{{ form_label(form.message) }}
+				{{ form_widget(form.message, {attr: {class: 'form-control', rows: 6, required: true}}) }}
+				<div class="invalid-feedback d-block" data-error-for="message"></div>
+			</div>
+
+			<button type="submit" class="btn btn-primary" id="contactSubmit">Envoyer</button>
+
+			{{ form_end(form) }}
+
+		</div>
+	</div>
+
+	{# JS vanille pour AJAX + affichage erreurs/succès (compatible Bootstrap 4) #}
+	 <script>
+	(function () {
+	  const form = document.getElementById('contactForm');
+	  if (!form) return;
+	
+	  const alerts   = document.getElementById('contact-alerts');
+	  const submitBtn = document.getElementById('contactSubmit');
+	
+	  // Réinitialise l’affichage des erreurs
+	  function resetErrors() {
+	    document.querySelectorAll('[data-error-for]').forEach(el => { el.textContent = ''; });
+	  }
+	
+	  // Affiche les erreurs renvoyées (422) : { field: [msgs...] }
+	  function showFieldErrors(errors) {
+	    Object.entries(errors || {}).forEach(([name, messages]) => {
+	      const holder = document.querySelector('[data-error-for="' + name + '"]');
+	      if (holder) holder.textContent = Array.isArray(messages) ? messages.join(' ') : String(messages);
+	    });
+	  }
+	
+	  // Affiche une alerte Bootstrap 4
+	  function showAlert(type, text) {
+	    alerts.innerHTML = (
+	      '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+	        text +
+	        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+	          '<span aria-hidden="true">&times;</span>' +
+	        '</button>' +
+	      '</div>'
+	    );
+	  }
+	
+	  form.addEventListener('submit', function (e) {
+	    e.preventDefault();
+	    resetErrors();
+	    alerts.innerHTML = '';
+	
+	    // Empêcher le double submit
+	    const originalText = submitBtn.textContent;
+	    submitBtn.disabled = true;
+	    submitBtn.textContent = 'Envoi de message en cours…';
+	
+	    const formData = new FormData(form); // inclut _token CSRF et tous les champs
+	
+	    fetch(form.action, {
+	      method: 'POST',
+	      headers: {
+	        'X-Requested-With': 'XMLHttpRequest' // pour que le contrôleur sache que c’est AJAX
+	      },
+	      body: formData
+	    })
+	    .then(function (res) {
+	      return res.json().catch(function () { return {}; }).then(function (data) {
+	        return { ok: res.ok, status: res.status, data: data };
+	      });
+	    })
+	    .then(function (res) {
+	      if (res.ok && res.data && res.data.ok) {
+	        showAlert('success', res.data.message || 'Message envoyé.');
+	        form.reset();
+	      } else if (res.status === 422 && res.data && res.data.errors) {
+	        showFieldErrors(res.data.errors);
+	        showAlert('danger', 'Merci de corriger les erreurs.');
+	      } else {
+	        showAlert('danger', (res.data && res.data.error) ? res.data.error : 'Envoi impossible pour le moment.');
+	      }
+	    })
+	    .catch(function () {
+	      showAlert('danger', 'Erreur réseau.');
+	    })
+	    .finally(function () {
+	      submitBtn.disabled = false;
+	      submitBtn.textContent = originalText;
+	    });
+	  });
+	})();
+	</script>
+{% endblock %}
+

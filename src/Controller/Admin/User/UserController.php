@@ -74,7 +74,7 @@ final class UserController extends AbstractController
         // empêcher de se bloquer soi-même
         if ($security->getUser() && $security->getUser()->getId() === $user->getId()) {
             $this->addFlash('warning', 'Vous ne pouvez pas vous bloquer vous-même.');
-            return $this->redirectToRoute('admin_user_show', ['id' => $user->getId()]);
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()]);
         }
 
         // Toggle
