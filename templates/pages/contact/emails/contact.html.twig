@@ -1,0 +1,60 @@
+{# templates/emails/contact.html.twig #}
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title>Nouveau message de contact</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body style="margin:0;padding:0;background:#f6f8fb;font-family:Arial,Helvetica,sans-serif;">
+		<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f8fb;padding:24px 0;">
+			<tr>
+				<td align="center">
+					<table role="presentation" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e9eef5;">
+						<tr>
+							<td style="padding:20px 24px;background:#0d6efd;color:#fff;">
+								<h1 style="margin:0;font-size:20px;line-height:1.2;">Nouveau message de contact</h1>
+							</td>
+						</tr>
+						<tr>
+							<td style="padding:24px;">
+								<p style="margin:0 0 12px 0;font-size:14px;color:#111;">
+									<strong>Nom&nbsp;:</strong>
+									{{ fullName }}
+								</p>
+								<p style="margin:0 0 12px 0;font-size:14px;color:#111;">
+									<strong>Email&nbsp;:</strong>
+									{{ userEmail }}
+								</p>
+
+								<hr style="border:none;border-top:1px solid #e9eef5;margin:16px 0;">
+
+								<p style="margin:0 0 8px 0;font-size:14px;color:#111;">
+									<strong>Message :</strong>
+								</p>
+								<pre style="margin:0;background:#f8fafc;border:1px solid #e9eef5;border-radius:6px;padding:12px;white-space:pre-wrap;word-wrap:break-word;font-size:14px;color:#111;">
+{{ bodyText }}
+                </pre>
+
+							{# Optionnel: informations techniques #}
+								{# 
+								                <hr style="border:none;border-top:1px solid #e9eef5;margin:16px 0;">
+								                <p style="margin:0;font-size:12px;color:#667085;">
+								                  Reçu le {{ "now"|date("d/m/Y H:i") }}.
+								                </p>
+								                #}
+							</td>
+						</tr>
+						<tr>
+							<td style="padding:16px 24px;background:#f6f8fb;color:#667085;font-size:12px;">
+								Cet e-mail a été généré par le formulaire de contact du site.
+								                Utilisez «&nbsp;Répondre&nbsp;» pour répondre directement à l’expéditeur.
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
+
