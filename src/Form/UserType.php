@@ -34,8 +34,7 @@ class UserType extends AbstractType
                         max: 30,
                         minMessage: 'Ton pseudo doit contenir au moins {{ limit }} caractères.',
                         maxMessage: 'Ton pseudo ne peut pas dépasser {{ limit }} caractères.'
-                    ),
-                    // Seulement des lettres A–Z/a–z, donc :
+                ),
                     new Assert\Regex(
                         pattern: '/^[A-Za-z]+$/',
                         message: 'Utilise uniquement des lettres (A–Z), sans espace ni caractère spécial.'
@@ -43,18 +42,14 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
-                'required' => true,
-                'attr' => [
+            'required' => !$options['disable_email'], // optionnel
+            'disabled' => $options['disable_email'],  // <-- clé
+            'attr' => [
                     'placeholder' => 'exemple@gmail.com',
                     'class' => 'form-control form-control-user',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(message: 'L’email est requis.'),
-                    new Assert\Email(message: 'Format d’email invalide.'),
-                    new Assert\Length(
-                        max: 180,
-                        maxMessage: '180 caractères maximum.'
-                    ),
+                new Assert\Length(max: 180, maxMessage: '180 caractères maximum.'),
                 ],
             ])
             ->add('roles', ChoiceType::class, [
@@ -134,13 +129,11 @@ class UserType extends AbstractType
                     'placeholder'  => 'Date de naissance',
                 ],
                 'constraints' => [
-                    new Assert\LessThanOrEqual(['value' => 'today', 'message' => 'La date doit être dans le passé.']),
-                    // âge mini 16 ans (change à 18 si besoin)
+                new Assert\LessThanOrEqual(['value' => 'today', 'message' => 'La date doit être dans le passé.']),
                     new Assert\LessThanOrEqual([
                         'value' => (new \DateTimeImmutable('-16 years')),
                         'message' => 'Vous devez avoir au moins 16 ans.',
-                    ]),
-                    // borne basse raisonnable
+                ]),
                     new Assert\GreaterThan(['value' => '1900-01-01', 'message' => 'Date trop ancienne.']),
                 ],
             ]);
@@ -165,7 +158,8 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class'       => User::class,
-            'include_password' => true,
+            'include_password' => false, // par defaut on ne montre PAS le champ mot de passe 
+            'disable_email'    => true,
         ]);
     }
 }
