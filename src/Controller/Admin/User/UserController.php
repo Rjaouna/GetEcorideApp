@@ -44,16 +44,16 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{uuid}', name: 'app_user_show', requirements: ['uuid' => '[0-9a-fA-F-]{36}'], methods: ['GET'])]
-    public function show(string $uuid, UserRepository $repo): Response
+    #[Route('/{id}', name: 'app_user_show',  methods: ['GET'])]
+    public function show(string $id, UserRepository $repo): Response
     {
-        $user = $repo->findOneBy(['uuid' => $uuid]);
+        $user = $repo->findOneBy(['id' => $id]);
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur introuvable.');
         }
 
         return $this->render('admin/dashboard/user/show.html.twig', [
-            'user' => $user, // passe l'objet entier, pas juste l'UUID
+            'user' => $user,
         ]);
     }
 
