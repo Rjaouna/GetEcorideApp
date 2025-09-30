@@ -1,0 +1,79 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Page introuvable (404) —
+	{{ status_text }}
+{% endblock %}
+
+{# Évite l’indexation SEO de la page d’erreur #}
+{% block meta %}
+	<meta name="robots" content="noindex,nofollow">
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-xl-8 col-lg-9">
+
+				<div class="card shadow-sm border-0">
+					<div
+						class="card-body p-4 p-md-5 text-center">
+
+						{# Illustration simple en SVG (aucun asset externe) #}
+						<div class="mb-4">
+							<svg width="120" height="120" viewbox="0 0 120 120" role="img" aria-label="Page introuvable">
+								<circle cx="60" cy="60" r="58" fill="none" stroke="currentColor" stroke-width="4" opacity=".1"/>
+								<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="36" font-weight="700" opacity=".25">{{exception.statusCode}}</text>
+							</svg>
+						</div>
+
+						<h1 class="display-6 fw-bold mb-2">Oups… page introuvable</h1>
+						<p class="text-muted mb-3">
+							{{ status_text }}
+							— la ressource demandée n’existe pas ou a été déplacée.
+						</p>
+
+						<div class="small text-muted mb-4">
+							<span class="d-block">URL demandée&nbsp;:
+								<code>{{ app.request.uri }}</code>
+							</span>
+							<span class="d-block">Code&nbsp;:
+								<strong>{{ status_code }}</strong>
+							</span>
+						</div>
+
+						<div class="d-flex flex-wrap justify-content-center gap-2">
+							<a href="#" class="btn btn-primary btn-lg">
+								Retour à l’accueil
+							</a>
+							<a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg">
+								Page précédente
+							</a>
+							<a href="/" class="btn btn-link">
+								Aller à la racine du site
+							</a>
+						</div>
+
+						<hr class="my-4">
+
+						<form action="#" method="get" class="mx-auto" style="max-width:520px">
+							<div class="input-group">
+								<input name="q" type="search" class="form-control form-control-lg" placeholder="Rechercher un produit ou une page…">
+								<button class="btn btn-outline-primary btn-lg" type="submit">Rechercher</button>
+							</div>
+						</form>
+
+						<p class="mt-4 mb-0 text-muted small">
+							Besoin d’aide ?
+							<a href="#">Contacte-nous</a>.
+						</p>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/dashboard/user')]
+#[Route('admin/dashboard/user')]
 final class UserController extends AbstractController
 {
     #[Route(name: 'app_user_index', methods: ['GET'])]
