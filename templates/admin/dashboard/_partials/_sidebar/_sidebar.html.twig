@@ -1,14 +1,16 @@
 {# templates/_partials/sidebar.html.twig #}
+
 {# Détecte la route courante pour activer les menus #}
 {% set route = app.request.attributes.get('_route') %}
 {% set usersOpen = route starts with 'app_user_' %}
 {% set vehicleOpen = route starts with 'app_vehicle_' or route starts with 'app_dashboard_vehicle_' %}
+{% set covoiturageOpen = route starts with 'admin_carpooling_' %}
 {% set dashActive = route == 'app_admin_dashboard' %}
 
 	<ul
 	class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"> {# Logo #}
 	<li class="bg-light my-2 mx-1 rounded p-1">
-			<img src="{{ asset('dashboard/img/logo.svg') }}" alt="Logo">
+		<img src="{{ asset('dashboard/img/logo.svg') }}" alt="Logo">
 	</li>
 
 	<hr
@@ -34,11 +36,39 @@
 			<i class="fas fa-fw fa-user"></i>
 			<span>Gestion utilisateurs</span>
 		</a>
+
 		<div id="collapseUsers" class="collapse {{ usersOpen ? 'show' }}" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
 				<h6 class="collapse-header">Gestion utilisateurs</h6>
-				<a class="collapse-item {{ route == 'app_user_index' ? 'active' }}" href="{{ path('app_user_index') }}">Liste utilisateurs</a>
-				<a class="collapse-item {{ route == 'app_user_new' ? 'active' }}" href="{{ path('app_user_new') }}">Ajouter un utilisateur</a>
+				<a class="collapse-item {{ route == 'app_user_index' ? 'active' }}" href="{{ path('app_user_index') }}">
+					Liste utilisateurs
+				</a>
+				<a class="collapse-item {{ route == 'app_user_new' ? 'active' }}" href="{{ path('app_user_new') }}">
+					Ajouter un utilisateur
+				</a>
+			</div>
+		</div>
+	</li>
+
+	{# Gestion des covoiturages #}
+	<li class="nav-item {{ covoiturageOpen ? 'active' }}">
+		<a class="nav-link {{ covoiturageOpen ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseCovoiturage" aria-expanded="{{ covoiturageOpen ? 'true' : 'false' }}" aria-controls="collapseCovoiturage">
+			<i class="fas fa-fw fa-route"></i>
+			<span>Gestion covoiturage</span>
+		</a>
+
+		<div id="collapseCovoiturage" class="collapse {{ covoiturageOpen ? 'show' }}" aria-labelledby="headingCovoiturage" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<h6 class="collapse-header">Gestion covoiturage</h6>
+
+				{# Adapte ces routes si nécessaire à tes noms réels #}
+				<a class="collapse-item {{ route == 'admin_carpooling_index' ? 'active' }}" href="{{ path('admin_carpooling_index') }}">
+					Liste des covoiturages
+				</a>
+
+				<a class="collapse-item {{ route == 'admin_carpooling_new' ? 'active' }}" href="{{ path('admin_carpooling_new') }}">
+					Ajouter un covoiturage
+				</a>
 			</div>
 		</div>
 	</li>
@@ -49,11 +79,16 @@
 			<i class="fas fa-fw fa-car"></i>
 			<span>Gestion voitures</span>
 		</a>
+
 		<div id="collapseVehicles" class="collapse {{ vehicleOpen ? 'show' }}" aria-labelledby="headingVehicles" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
 				<h6 class="collapse-header">Gestion voitures</h6>
-				<a class="collapse-item {{ route == 'app_vehicle_index' ? 'active' }}" href="{{ path('app_vehicle_index') }}">Liste des voitures</a>
-				<a class="collapse-item {{ route == 'app_vehicle_new' ? 'active' }}" href="{{ path('app_vehicle_new') }}">Ajouter une voiture</a>
+				<a class="collapse-item {{ route == 'app_vehicle_index' ? 'active' }}" href="{{ path('app_vehicle_index') }}">
+					Liste des voitures
+				</a>
+				<a class="collapse-item {{ route == 'app_vehicle_new' ? 'active' }}" href="{{ path('app_vehicle_new') }}">
+					Ajouter une voiture
+				</a>
 			</div>
 		</div>
 	</li>
@@ -70,15 +105,14 @@
 			<i class="fas fa-fw fa-folder"></i>
 			<span>Pages</span>
 		</a>
+
 		<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
 				<h6 class="collapse-header">Login Screens:</h6>
 				<a class="collapse-item" href="{{ path('app_login') }}">Login</a>
-				{# Ajoute tes routes si tu as des pages register/forgot #}
-				{# <a class="collapse-item" href="{{ path('app_register') }}">Register</a> #}
-				{# <a class="collapse-item" href="{{ path('app_forgot_password_request') }}">Forgot Password</a> #}<div class="collapse-divider"> </div>
+
+				<div class="collapse-divider"></div>
 				<h6 class="collapse-header">Other Pages:</h6>
-				{# Adapte ou supprime ces liens démo #}
 				<a class="collapse-item" href="#">404 Page</a>
 				<a class="collapse-item" href="#">Blank Page</a>
 			</div>
@@ -92,6 +126,7 @@
 			<span>Charts</span>
 		</a>
 	</li>
+
 	<li class="nav-item">
 		<a class="nav-link" href="#">
 			<i class="fas fa-fw fa-table"></i>

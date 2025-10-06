@@ -1,0 +1,213 @@
+{# templates/admin/dashboard/carpooling/show.html.twig #}
+{% extends 'template.html.twig' %}
+
+{% block title %}Détails covoiturage
+{% endblock %}
+
+{% block body %}
+	<div
+		class="row">
+		{# Carte principale #}
+		<div class="col-lg-8 mb-4">
+			<div class="card shadow">
+				<div class="card-header py-3 d-flex justify-content-between align-items-center">
+					<h6 class="m-0 font-weight-bold text-primary">
+						<i class="fas fa-route"></i>
+						Détails du covoiturage
+					</h6>
+
+					<div
+						class="d-flex align-items-center">
+						{# Badge Statut #}
+						{% set statusColors = { 'draft':'secondary', 'published':'success', 'cancelled':'danger' } %}
+						<span class="badge badge-{{ statusColors[carpooling.status]|default('secondary') }} mr-2">
+							{{ carpooling.status|default('—')|capitalize }}
+						</span>
+						{# Badge Eco #}
+						<span class="badge badge-{{ carpooling.ecoTag ? 'success' : 'light' }}">
+							{{ carpooling.ecoTag ? 'Éco' : 'Standard' }}
+						</span>
+					</div>
+				</div>
+
+				<div class="card-body">
+					<div class="row">
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Conducteur</div>
+							<div class="h6 mb-0">
+								{% if carpooling.driver %}
+									<i class="fas fa-user"></i>
+									{% set d = carpooling.driver %}
+									<a href="{{ path('app_user_show', {id: d.id}) }}">
+										{{ d.pseudo ?: d.email }}
+									</a>
+								{% else %}
+									—
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Véhicule</div>
+							<div class="h6 mb-0">
+								{% if carpooling.vehicle %}
+									<i class="fas fa-car"></i>
+									{# adapte la route si tu as un show véhicule admin #}
+									<a href="{{ path('app_vehicle_show', {id: carpooling.vehicle.id}) }}">
+										Véhicule #{{ carpooling.vehicle.id }}
+									</a>
+								{% else %}
+									—
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Ville de départ</div>
+							<div class="h5 mb-0 font-weight-bold text-gray-900">
+								<i class="fas fa-location-arrow"></i>
+								{{ carpooling.deparatureCity ?: '—' }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Ville d’arrivée</div>
+							<div class="h5 mb-0 font-weight-bold text-gray-900">
+								<i class="fas fa-map-marker-alt"></i>
+								{{ carpooling.arrivalCity ?: '—' }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Départ</div>
+							<div class="h6 mb-0">
+								{{ carpooling.deparatureAt ? carpooling.deparatureAt|date('d/m/Y H:i') : '—' }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Arrivée</div>
+							<div class="h6 mb-0">
+								{{ carpooling.arrivalAt ? carpooling.arrivalAt|date('d/m/Y H:i') : '—' }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Places totales</div>
+							<div class="h6 mb-0">{{ carpooling.seatsTotal ?? '—' }}</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Places disponibles</div>
+							<div class="h6 mb-0">
+								{{ carpooling.seatsAvaible is not null ? carpooling.seatsAvaible : '—' }}
+							</div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<div class="small text-muted">Prix</div>
+							<div class="h6 mb-0">
+								{{ carpooling.price is not null ? (carpooling.price|number_format(2, ',', ' ') ~ ' €') : '—' }}
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="card-footer d-flex justify-content-between">
+					<small class="text-muted">
+						<i class="far fa-id-badge"></i>
+						ID :
+						{{ carpooling.id }}
+					</small>
+					<small class="text-muted">
+						<i class="far fa-clock"></i>
+						Créé le :
+						{{ carpooling.createdAt ? carpooling.createdAt|date('d/m/Y H:i') : '—' }}
+					</small>
+					<small class="text-muted">
+						<i class="far fa-edit"></i>
+						MAJ :
+						{{ carpooling.updatedAt ? carpooling.updatedAt|date('d/m/Y H:i') : '—' }}
+					</small>
+				</div>
+			</div>
+		</div>
+
+		{# Carte “Résumé rapide” #}
+		<div class="col-lg-4 mb-4">
+			<div class="card border-left-info shadow h-100 py-2">
+				<div class="card-body">
+					<div class="text-xs font-weight-bold text-info text-uppercase mb-3">
+						<i class="fas fa-info-circle"></i>
+						Résumé
+					</div>
+
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Trajet
+							<span class="badge badge-light">
+								{{ carpooling.deparatureCity ?: '—' }}
+								→
+								{{ carpooling.arrivalCity ?: '—' }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Départ
+							<span class="badge badge-light">
+								{{ carpooling.deparatureAt ? carpooling.deparatureAt|date('d/m/Y H:i') : '—' }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Arrivée
+							<span class="badge badge-light">
+								{{ carpooling.arrivalAt ? carpooling.arrivalAt|date('d/m/Y H:i') : '—' }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Places
+							<span class="badge badge-light">
+								{{ carpooling.seatsAvaible is not null ? carpooling.seatsAvaible : '—' }}/{{ carpooling.seatsTotal ?? '—' }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Prix
+							<span class="badge badge-light">
+								{{ carpooling.price is not null ? (carpooling.price|number_format(2, ',', ' ') ~ ' €') : '—' }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Statut
+							<span class="badge badge-{{ statusColors[carpooling.status]|default('secondary') }}">
+								{{ carpooling.status|default('—')|capitalize }}
+							</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							Éco
+							<span class="badge badge-{{ carpooling.ecoTag ? 'success' : 'secondary' }}">
+								{{ carpooling.ecoTag ? 'Oui' : 'Non' }}
+							</span>
+						</li>
+					</ul>
+
+					<div class="mt-3 d-flex flex-wrap">
+						<a href="{{ path('admin_carpooling_edit', {'id': carpooling.id}) }}" class="btn btn-warning btn-sm mr-2 mb-2">
+							<i class="fas fa-edit"></i>
+							Modifier
+						</a>
+
+						<a href="{{ path('admin_carpooling_index') }}" class="btn btn-light btn-sm mr-2 mb-2">
+							<i class="fas fa-list"></i>
+							Liste
+						</a>
+
+						{# Formulaire de suppression #}
+						{{ include('admin/dashboard/carpooling/_delete_form.html.twig') }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

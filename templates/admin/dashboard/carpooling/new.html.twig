@@ -1,0 +1,12 @@
+{% extends 'template.html.twig' %}
+
+
+{% block title %}New Carpooling{% endblock %}
+
+{% block body %}
+    <h1>Create new Carpooling</h1>
+
+    {{ include('admin/dashboard/carpooling/_form.html.twig') }}
+
+    <a href="{{ path('admin_carpooling_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,115 @@
+{# templates/admin/dashboard/carpooling/_form.html.twig #}
+{{ form_start(form, { attr: { class: 'user' } }) }}
+
+{# Résumé d’erreurs (global + champs) #}
+{% if not form.vars.valid %}
+	<div class="alert alert-danger">
+		<ul
+			class="mb-0">
+			{# Erreurs globales #}
+			{% for error in form.vars.errors %}
+				<li>{{ error.message }}</li>
+			{% endfor %}
+			{# Erreurs des champs #}
+			{% for child in form %}
+				{% for error in child.vars.errors %}
+					<li>{{ form_label(child) }}
+						—
+						{{ error.message }}</li>
+				{% endfor %}
+			{% endfor %}
+		</ul>
+	</div>
+{% endif %}
+
+{# Driver / Vehicle #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.driver, {
+      label: 'Conducteur',
+      attr: { class: 'form-control form-control-user' }
+    }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.vehicle, {
+      label: 'Véhicule',
+      attr: { class: 'form-control form-control-user' }
+    }) }}
+	</div>
+</div>
+
+{# Villes #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.deparatureCity, {
+      label: 'Ville de départ',
+      attr: { class: 'form-control form-control-user', placeholder: 'Ex : Lille' }
+    }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.arrivalCity, {
+      label: 'Ville d’arrivée',
+      attr: { class: 'form-control form-control-user', placeholder: 'Ex : Paris' }
+    }) }}
+	</div>
+</div>
+
+{# Dates #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.deparatureAt, {
+      label: 'Départ le',
+      attr: { class: 'form-control form-control-user' }
+    }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.arrivalAt, {
+      label: 'Arrivée le',
+      attr: { class: 'form-control form-control-user' }
+    }) }}
+	</div>
+</div>
+
+{# Capacités #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.seatsTotal, {
+      label: 'Places totales',
+      attr: { class: 'form-control form-control-user', min: 1, max: 8 }
+    }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.seatsAvaible, {
+      label: 'Places disponibles',
+      attr: { class: 'form-control form-control-user', min: 0, max: 8 }
+    }) }}
+	</div>
+</div>
+
+{# Prix / Statut #}
+<div class="form-group row">
+	<div class="col-sm-6 mb-3 mb-sm-0">
+		{{ form_row(form.price, {
+      label: 'Prix',
+      attr: { class: 'form-control form-control-user' }
+    }) }}
+	</div>
+	<div class="col-sm-6">
+		{{ form_row(form.status, {
+      label: 'Statut',
+      attr: { class: 'form-control form-control-user' }
+    }) }}
+	</div>
+</div>
+
+{# Éco-tag #}
+<div class="form-group">
+	{{ form_row(form.ecoTag, { label: 'Trajet éco-responsable' }) }}
+</div>
+
+<button type="submit" class="btn btn-primary btn-user btn-block">
+	{{ button_label|default(form.vars.value.id is defined and form.vars.value.id ? 'Mettre à jour le covoiturage' : 'Enregistrer le covoiturage') }}
+</button>
+
+{{ form_end(form) }}
+

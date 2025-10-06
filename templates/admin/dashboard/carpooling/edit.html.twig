@@ -1,0 +1,15 @@
+{% extends 'template.html.twig' %}
+
+
+{% block title %}Edit Carpooling{% endblock %}
+
+{% block body %}
+    <h1>Edit Carpooling</h1>
+
+    {{ include('admin/dashboard/carpooling/_form.html.twig', {'button_label': 'Update'}) }}
+
+<a href="{{ path('admin_carpooling_index') }}">back to list</a>
+
+
+    {{ include('admin/dashboard/carpooling/_delete_form.html.twig') }}
+{% endblock %}
