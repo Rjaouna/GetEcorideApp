@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Base\AbstractEntity;
 use App\Repository\VehicleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,6 +41,17 @@ class Vehicle extends AbstractEntity
 
     #[ORM\Column(nullable: true)]
     private ?bool $isActive = null;
+
+    /**
+     * @var Collection<int, Carpoling>
+     */
+    #[ORM\OneToMany(targetEntity: Carpoling::class, mappedBy: 'vehicle')]
+    private Collection $carpolings;
+
+    public function __construct()
+    {
+        $this->carpolings = new ArrayCollection();
+    }
 
 
 
@@ -139,6 +152,36 @@ class Vehicle extends AbstractEntity
     public function setIsActive(?bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carpoling>
+     */
+    public function getCarpolings(): Collection
+    {
+        return $this->carpolings;
+    }
+
+    public function addCarpoling(Carpoling $carpoling): static
+    {
+        if (!$this->carpolings->contains($carpoling)) {
+            $this->carpolings->add($carpoling);
+            $carpoling->setVehicle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCarpoling(Carpoling $carpoling): static
+    {
+        if ($this->carpolings->removeElement($carpoling)) {
+            // set the owning side to null (unless already changed)
+            if ($carpoling->getVehicle() === $this) {
+                $carpoling->setVehicle(null);
+            }
+        }
 
         return $this;
     }

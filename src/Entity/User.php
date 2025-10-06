@@ -78,11 +78,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isLocked = null;
 
+    /**
+     * @var Collection<int, Carpoling>
+     */
+    #[ORM\OneToMany(targetEntity: Carpoling::class, mappedBy: 'driver')]
+    private Collection $carpolings;
+
 
 
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
+        $this->carpolings = new ArrayCollection();
     }
     // -----------------------------------
 
@@ -296,6 +303,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsLocked(?bool $isLocked): static
     {
         $this->isLocked = $isLocked;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carpoling>
+     */
+    public function getCarpolings(): Collection
+    {
+        return $this->carpolings;
+    }
+
+    public function addCarpoling(Carpoling $carpoling): static
+    {
+        if (!$this->carpolings->contains($carpoling)) {
+            $this->carpolings->add($carpoling);
+            $carpoling->setDriver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCarpoling(Carpoling $carpoling): static
+    {
+        if ($this->carpolings->removeElement($carpoling)) {
+            // set the owning side to null (unless already changed)
+            if ($carpoling->getDriver() === $this) {
+                $carpoling->setDriver(null);
+            }
+        }
 
         return $this;
     }
