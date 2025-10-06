@@ -5,21 +5,21 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Base\AbstractEntity;
-use App\Repository\CarpolingRepository;
+use App\Repository\CarpoolingRepository;
 
-#[ORM\Entity(repositoryClass: CarpolingRepository::class)]
-class Carpoling extends AbstractEntity
+#[ORM\Entity(repositoryClass: CarpoolingRepository::class)]
+class Carpooling extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'carpolings')]
+    #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $driver = null;
 
-    #[ORM\ManyToOne(inversedBy: 'carpolings')]
+    #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicle $vehicle = null;
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Carpooling;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -79,17 +80,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isLocked = null;
 
     /**
-     * @var Collection<int, Carpoling>
+     * @var Collection<int, Carpooling>
      */
-    #[ORM\OneToMany(targetEntity: Carpoling::class, mappedBy: 'driver')]
-    private Collection $carpolings;
+    #[ORM\OneToMany(targetEntity: Carpooling::class, mappedBy: 'driver')]
+    private Collection $carpoolings;
 
 
 
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
-        $this->carpolings = new ArrayCollection();
+        $this->carpoolings = new ArrayCollection();
     }
     // -----------------------------------
 
@@ -308,29 +309,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Carpoling>
+     * @return Collection<int, Carpooling>
      */
-    public function getCarpolings(): Collection
+    public function getCarpoolings(): Collection
     {
-        return $this->carpolings;
+        return $this->carpoolings;
     }
 
-    public function addCarpoling(Carpoling $carpoling): static
+    public function addCarpooling(Carpooling $carpooling): static
     {
-        if (!$this->carpolings->contains($carpoling)) {
-            $this->carpolings->add($carpoling);
-            $carpoling->setDriver($this);
+        if (!$this->carpoolings->contains($carpooling)) {
+            $this->carpoolings->add($carpooling);
+            $carpooling->setDriver($this);
         }
 
         return $this;
     }
 
-    public function removeCarpoling(Carpoling $carpoling): static
+    public function removeCarpooling(Carpooling $carpooling): static
     {
-        if ($this->carpolings->removeElement($carpoling)) {
+        if ($this->carpoolings->removeElement($carpooling)) {
             // set the owning side to null (unless already changed)
-            if ($carpoling->getDriver() === $this) {
-                $carpoling->setDriver(null);
+            if ($carpooling->getDriver() === $this) {
+                $carpooling->setDriver(null);
             }
         }
 

@@ -43,14 +43,14 @@ class Vehicle extends AbstractEntity
     private ?bool $isActive = null;
 
     /**
-     * @var Collection<int, Carpoling>
+     * @var Collection<int, Carpooling>
      */
-    #[ORM\OneToMany(targetEntity: Carpoling::class, mappedBy: 'vehicle')]
-    private Collection $carpolings;
+    #[ORM\OneToMany(targetEntity: Carpooling::class, mappedBy: 'vehicle')]
+    private Collection $carpoolings;
 
     public function __construct()
     {
-        $this->carpolings = new ArrayCollection();
+        $this->carpoolings = new ArrayCollection();
     }
 
 
@@ -157,29 +157,29 @@ class Vehicle extends AbstractEntity
     }
 
     /**
-     * @return Collection<int, Carpoling>
+     * @return Collection<int, Carpooling>
      */
-    public function getCarpolings(): Collection
+    public function getCarpoolings(): Collection
     {
-        return $this->carpolings;
+        return $this->carpoolings;
     }
 
-    public function addCarpoling(Carpoling $carpoling): static
+    public function addCarpooling(Carpooling $carpooling): static
     {
-        if (!$this->carpolings->contains($carpoling)) {
-            $this->carpolings->add($carpoling);
-            $carpoling->setVehicle($this);
+        if (!$this->carpoolings->contains($carpooling)) {
+            $this->carpoolings->add($carpooling);
+            $carpooling->setVehicle($this);
         }
 
         return $this;
     }
 
-    public function removeCarpoling(Carpoling $carpoling): static
+    public function removeCarpooling(Carpooling $carpooling): static
     {
-        if ($this->carpolings->removeElement($carpoling)) {
+        if ($this->carpoolings->removeElement($carpooling)) {
             // set the owning side to null (unless already changed)
-            if ($carpoling->getVehicle() === $this) {
-                $carpoling->setVehicle(null);
+            if ($carpooling->getVehicle() === $this) {
+                $carpooling->setVehicle(null);
             }
         }
 

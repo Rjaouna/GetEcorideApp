@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20251006163048 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE carpooling (id INT AUTO_INCREMENT NOT NULL, created_by_id INT DEFAULT NULL, updated_by_id INT DEFAULT NULL, driver_id INT NOT NULL, vehicle_id INT NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', deparature_city VARCHAR(50) NOT NULL, arrival_city VARCHAR(50) NOT NULL, deparature_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', arrival_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', seats_total SMALLINT NOT NULL, seats_avaible SMALLINT DEFAULT NULL, price DOUBLE PRECISION NOT NULL, status VARCHAR(50) NOT NULL, eco_tag TINYINT(1) NOT NULL, INDEX IDX_EA4F2F73B03A8386 (created_by_id), INDEX IDX_EA4F2F73896DBBDE (updated_by_id), INDEX IDX_EA4F2F73C3423909 (driver_id), INDEX IDX_EA4F2F73545317D1 (vehicle_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE carpooling ADD CONSTRAINT FK_EA4F2F73B03A8386 FOREIGN KEY (created_by_id) REFERENCES `user` (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE carpooling ADD CONSTRAINT FK_EA4F2F73896DBBDE FOREIGN KEY (updated_by_id) REFERENCES `user` (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE carpooling ADD CONSTRAINT FK_EA4F2F73C3423909 FOREIGN KEY (driver_id) REFERENCES `user` (id)');
+        $this->addSql('ALTER TABLE carpooling ADD CONSTRAINT FK_EA4F2F73545317D1 FOREIGN KEY (vehicle_id) REFERENCES vehicle (id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE carpooling DROP FOREIGN KEY FK_EA4F2F73B03A8386');
+        $this->addSql('ALTER TABLE carpooling DROP FOREIGN KEY FK_EA4F2F73896DBBDE');
+        $this->addSql('ALTER TABLE carpooling DROP FOREIGN KEY FK_EA4F2F73C3423909');
+        $this->addSql('ALTER TABLE carpooling DROP FOREIGN KEY FK_EA4F2F73545317D1');
+        $this->addSql('DROP TABLE carpooling');
+    }
+}

@@ -75,4 +75,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $out;
     }
+
+    public function findDrivers(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%"ROLE_DRIVER"%')
+            ->getQuery()
+            ->getResult();
+    }
 }
