@@ -71,8 +71,7 @@ final class CarpoolingController extends AbstractController
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Carpooling $carpooling, EntityManagerInterface $entityManager): Response
     {
-        // Pour un formulaire classique, préfère:
-        // if ($this->isCsrfTokenValid('delete'.$carpooling->getId(), $request->request->get('_token'))) {
+
         if ($this->isCsrfTokenValid('delete' . $carpooling->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($carpooling);
             $entityManager->flush();

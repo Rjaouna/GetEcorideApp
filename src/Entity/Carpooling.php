@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Base\AbstractEntity;
 use App\Repository\CarpoolingRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CarpoolingRepository::class)]
 class Carpooling extends AbstractEntity
@@ -13,41 +14,54 @@ class Carpooling extends AbstractEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['carpooling.index'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['carpooling.index'])]
     private ?User $driver = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['carpooling.index'])]
+
     private ?Vehicle $vehicle = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['carpooling.index'])]
     private ?string $deparatureCity = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['carpooling.index'])]
     private ?string $arrivalCity = null;
 
     #[ORM\Column]
+    #[Groups(['carpooling.index'])]
     private ?\DateTimeImmutable $deparatureAt = null;
 
     #[ORM\Column]
+    #[Groups(['carpooling.index'])]
     private ?\DateTimeImmutable $arrivalAt = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['carpooling.index'])]
     private ?int $seatsTotal = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['carpooling.index'])]
     private ?int $seatsAvaible = null;
 
     #[ORM\Column]
+    #[Groups(['carpooling.index'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['carpooling.index'])]
     private ?string $status = null;
 
     #[ORM\Column]
+    #[Groups(['carpooling.index'])]
     private ?bool $ecoTag = null;
 
     public function getId(): ?int

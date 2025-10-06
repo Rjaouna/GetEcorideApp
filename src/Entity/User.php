@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\Traits\TimestampableTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -25,6 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['carpooling.index'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -47,15 +50,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $imageName = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['carpooling.index'])]
     private ?int $imageSize = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['carpooling.index'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['carpooling.index'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 20, nullable: true)]
@@ -68,6 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $dateOfBirth = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['carpooling.index'])]
     private ?string $pseudo = null;
 
     /**

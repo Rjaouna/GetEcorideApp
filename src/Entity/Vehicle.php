@@ -7,6 +7,8 @@ use App\Repository\VehicleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VehicleRepository::class)]
@@ -22,15 +24,18 @@ class Vehicle extends AbstractEntity
     private ?User $owner = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['carpooling.index'])]
     private ?string $plateNumber = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $firstRegistrationAt = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['carpooling.index'])]
     private ?string $brand = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['carpooling.index'])]
     private ?string $model = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
