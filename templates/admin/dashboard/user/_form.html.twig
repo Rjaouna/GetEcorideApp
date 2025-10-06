@@ -4,9 +4,25 @@
 {# Erreurs globales du formulaire #}
 {% if not form.vars.valid %}
 	<div class="alert alert-danger">
-		{{ form_errors(form) }}
+		<ul
+			class="mb-0">
+			{# erreurs globales #}
+			{% for error in form.vars.errors %}
+				<li>{{ error.message }}</li>
+			{% endfor %}
+			{# erreurs des champs #}
+			{% for child in form %}
+				{% for error in child.vars.errors %}
+					<li>{{ form_label(child) }}
+						—
+						{{ error.message }}</li>
+				{% endfor %}
+			{% endfor %}
+		</ul>
 	</div>
 {% endif %}
+
+
 
 {# Pseudo / Email #}
 <div class="form-group row">

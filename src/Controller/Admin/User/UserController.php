@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('admin/dashboard/user')]
 final class UserController extends AbstractController
 {
+    public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -31,7 +33,18 @@ final class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user, ['include_password' => true, 'disable_email'    => false]);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->getData()->getPassword();
+            if (!empty($password)) {
+                $passwordHashed = $this->passwordHasher->hashPassword($user, $password);
+            }
+
+            $user->setRoles(["ROLE_PASSAGER"]);
+            $user->setCreatedBy($this->getUser());
+            $user->setUpdatedBy($this->getUser());
+            $user->setPassword($passwordHashed);
+
             $entityManager->persist($user);
             $entityManager->flush();
 

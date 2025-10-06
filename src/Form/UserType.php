@@ -140,7 +140,7 @@ class UserType extends AbstractType
 
         if ($options['include_password']) {
             $builder->add('password', PasswordType::class, [
-                'mapped' => false,
+                'mapped' => true,
                 'required' => true,
                 'attr' => [
                     'autocomplete' => 'new-password',
