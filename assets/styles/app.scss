@@ -1,0 +1,32 @@
+/* assets/styles/app.scss */
+
+/* 1) Fonctions Bootstrap d'abord */
+@import "bootstrap/scss/functions";
+
+/* 2) Variables du thème Bootswatch choisi (ex: Lux) */
+@import "bootswatch/dist/lux/variables";
+
+/* 3) Tes overrides de variables AVANT le core Bootstrap */
+$primary: #1db575; // vert canard
+$secondary: #334155;
+$body-bg: #f8fafc;
+
+/* Tu peux aussi enrichir le map $theme-colors */
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+$theme-colors: map-merge(
+  $theme-colors,
+  (
+    "success": #16a34a,
+    "warning": #f59e0b
+  )
+);
+
+/* 4) Import du core Bootstrap */
+@import "bootstrap/scss/bootstrap";
+
+/* 5) Overrides spécifiques du thème Bootswatch */
+@import "bootswatch/dist/lux/bootswatch";
+
+/* 6) Tes styles projet */
+.btn-custom { /* … */ }

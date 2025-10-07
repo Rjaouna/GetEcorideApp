@@ -1,12 +1,3 @@
-// Stimulus (importmap)
-import { Application } from "@hotwired/stimulus";
-window.Stimulus = Application.start();
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import "./styles/app.css";
-
-console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");
+// assets/app.js
+import "./styles/app.scss";
+import "bootstrap"; // (si tu utilises les JS de Bootstrap)
