@@ -61,7 +61,6 @@ class Carpooling extends AbstractEntity
     private ?string $status = null;
 
     #[ORM\Column]
-    #[Groups(['carpooling.index'])]
     private ?bool $ecoTag = null;
 
     public function getId(): ?int
