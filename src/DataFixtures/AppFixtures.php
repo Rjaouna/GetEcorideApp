@@ -17,6 +17,7 @@ class AppFixtures extends Fixture
     {
         $faker = FakerFactory::create('fr_FR');
 
+
         // Petite fonction utilitaire pour une adresse sur une seule ligne
         $oneLineAddress = function () use ($faker): string {
             // $faker->address peut contenir des sauts de ligne : on aplati

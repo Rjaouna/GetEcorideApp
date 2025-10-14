@@ -14,53 +14,53 @@ class Carpooling extends AbstractEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['carpooling.index'])]
     private ?User $driver = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
 
     private ?Vehicle $vehicle = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $deparatureCity = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $arrivalCity = null;
 
     #[ORM\Column]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?\DateTimeImmutable $deparatureAt = null;
 
     #[ORM\Column]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?\DateTimeImmutable $arrivalAt = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?int $seatsTotal = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?int $seatsAvaible = null;
 
     #[ORM\Column]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $status = null;
 
     #[ORM\Column]
+    #[Groups(['profile:read'])]
     private ?bool $ecoTag = null;
 
     public function getId(): ?int

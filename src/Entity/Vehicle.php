@@ -24,24 +24,27 @@ class Vehicle extends AbstractEntity
     private ?User $owner = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $plateNumber = null;
 
     #[ORM\Column]
+    #[Groups(['profile:read'])]
     private ?\DateTimeImmutable $firstRegistrationAt = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $brand = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $model = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['profile:read'])]
     private ?int $seats = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['profile:read'])]
     private ?bool $isElectric = null;
 
     #[ORM\Column(nullable: true)]

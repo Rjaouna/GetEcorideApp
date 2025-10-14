@@ -29,10 +29,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['profil.details'])]
+    #[Groups(['profile:read'])]
     private ?int $id = null;
 
-    #[Groups(['profil.details'])]
+    #[Groups(['profile:read'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -46,6 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     // ---------- Vich Uploader ----------
     // Fichier uploadé (non mappé en DB)
+    #[Groups(['profile:read'])]
     #[Vich\UploadableField(mapping: 'user_avatar', fileNameProperty: 'imageName', size: 'imageSize')]
     private ?File $imageFile = null;
 
@@ -53,46 +54,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $imageName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['carpooling.index'])]
     private ?int $imageSize = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['profile:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['profile:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['profile:read'])]
     private ?string $address = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
+    #[Groups(['profile:read'])]
     private ?\DateTimeImmutable $dateOfBirth = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['carpooling.index'])]
+    #[Groups(['profile:read'])]
     private ?string $pseudo = null;
 
     /**
      * @var Collection<int, Vehicle>
      */
     #[ORM\OneToMany(targetEntity: Vehicle::class, mappedBy: 'owner')]
+    #[Groups(['profile:read'])]
     private Collection $vehicles;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['profile:read'])]
     private ?bool $isLocked = null;
 
     /**
      * @var Collection<int, Carpooling>
      */
     #[ORM\OneToMany(targetEntity: Carpooling::class, mappedBy: 'driver')]
+    #[Groups(['profile:read'])]
     private Collection $carpoolings;
 
     #[ORM\Column]
