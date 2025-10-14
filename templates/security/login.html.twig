@@ -1,29 +1,100 @@
+{# templates/security/login.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion
+{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+	<div class="d-flex align-items-center justify-content-center min-vh-100">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div
+					class="col-md-7">
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
+					{# Card #}
+					<div class="card shadow-sm border-0 rounded-4">
+						<div
+							class="card-body">
 
-<h1 class="h3 mb-3 font-weight-normal text-primary">Please sign in</h1>
+							{# Brand / Logo #}
+							<div class="text-center mb-4">
+								
+								<h1 class="h4 mb-0 fw-semibold text-primary">Connexion</h1>
+								<p class="text-muted small mb-0">Accédez à votre compte</p>
+							</div>
 
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+							{# Messages #}
+							{% if error %}
+								<div class="alert alert-danger small">
+									{{ error.messageKey|trans(error.messageData, 'security') }}
+								</div>
+							{% endif %}
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+							{% if app.user %}
+								<div class="alert alert-info small d-flex justify-content-between align-items-center">
+									<span>Connecté en tant que
+										<strong>{{ app.user.userIdentifier }}</strong>
+									</span>
+									<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_logout') }}">Se déconnecter</a>
+								</div>
+							{% endif %}
+
+							{# Form #}
+							<form method="post" novalidate>
+								<div class="mb-3">
+									<label for="inputEmail" class="form-label">Email</label>
+									<input type="email" name="email" id="inputEmail" class="form-control" value="{{ last_username }}" autocomplete="email" required autofocus placeholder="vous@exemple.com">
+								</div>
+
+								<div class="mb-2">
+									<label for="inputPassword" class="form-label d-flex justify-content-between">
+										<span>Mot de passe</span>
+										<a href="#" class="small">Mot de passe oublié ?</a>
+									</label>
+									<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="••••••••">
+								</div>
+
+								{# Remember me (si activé côté firewall) #}
+								<div class="form-check mb-3">
+									<input class="form-check-input" type="checkbox" value="on" id="remember_me" name="_remember_me">
+									<label class="form-check-label" for="remember_me">Se souvenir de moi</label>
+								</div>
+
+								<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+								<button class="btn btn-primary btn-lg w-100" type="submit">
+									Se connecter
+								</button>
+							</form>
+
+							{# Divider #}
+							<div class="text-center my-3">
+								<span class="text-muted small">— ou —</span>
+							</div>
+
+							{# Register link #}
+							<div class="text-center">
+<a class="btn btn-success btn-lg w-100" href="{{path('app_register')}}">
+
+	Créer un compte
+</a>
+
+							</div>
+
+						</div>
+					</div>
+
+					{# Footer mini #}
+					<p class="text-center text-muted small mt-3 mb-0">
+						<a href="{{ path('app_front_home') }}" class="text-decoration-none">← Retour à l’accueil</a>
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 {% endblock %}
+

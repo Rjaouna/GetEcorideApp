@@ -1,32 +1,51 @@
 /* assets/styles/app.scss */
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
-/* 1) Fonctions Bootstrap d'abord */
+/* 1) Fonctions Bootstrap */
 @import "bootstrap/scss/functions";
 
-/* 2) Variables du thème Bootswatch choisi (ex: Lux) */
+/* 2) Variables du thème Bootswatch (Lux ici) */
 @import "bootswatch/dist/lux/variables";
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+$headings-font-weight: 800;
+$btn-font-weight: 600;
+/* 3) Tes overrides (après Bootswatch) */
+$primary:   #1db575;
+$secondary: #444545;
+$success:   #D2F0E3;
+$info:      #0ea5e9;
+$warning:   #f59e0b;
+$danger:    #ef4444;
+$light:     #f8fafc;
+$dark:      #333333;
 
-/* 3) Tes overrides de variables AVANT le core Bootstrap */
-$primary: #1db575; // vert canard
-$secondary: #334155;
-$body-bg: #f8fafc;
-
-/* Tu peux aussi enrichir le map $theme-colors */
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/maps";
-$theme-colors: map-merge(
-  $theme-colors,
-  (
-    "success": #16a34a,
-    "warning": #f59e0b
-  )
+/* 3.b) Re-construire complètement la map $theme-colors
+   (Bootswatch en a déjà mis une version : on l’écrase) */
+$theme-colors: (
+  "primary":   $primary,
+  "secondary": $secondary,
+  "success":   $success,
+  "info":      $info,
+  "warning":   $warning,
+  "danger":    $danger,
+  "light":     $light,
+  "dark":      $dark
 );
 
-/* 4) Import du core Bootstrap */
+/* 4) Variables & maps Bootstrap (certaines mixins/variables en dépendent) */
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+
+/* 5) Core Bootstrap */
 @import "bootstrap/scss/bootstrap";
 
-/* 5) Overrides spécifiques du thème Bootswatch */
+/* 6) Overrides Bootswatch (styles de composants) */
 @import "bootswatch/dist/lux/bootswatch";
 
-/* 6) Tes styles projet */
-.btn-custom { /* … */ }
+
+/* 7) Tes styles */
+.btn-custom {
+  // exemple : utilise la variable CSS générée
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}

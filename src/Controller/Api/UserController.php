@@ -32,9 +32,9 @@ final class UserController extends AbstractController
         $e->flush();
         $url = $this->generateUrl('user_profil', ['id' => $user->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->json(
-            ['id' => $user->getId()],
+            ['id' => $user->getId(), $user],
             Response::HTTP_CREATED,
-            ['Location' => 'ljjljljlhgjhfh' . $url]                    // <<< 3e argument = headers
+            ['Location' => $url]                    // <<< 3e argument = headers
         );
     }
 

@@ -1,0 +1,120 @@
+<div id="carouselEcoRide" class="my-3 carousel slide shadow-sm rounded px-0">
+	<div class="carousel-indicators">
+		<button type="button" data-bs-target="#carouselEcoRide" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+		<button type="button" data-bs-target="#carouselEcoRide" data-bs-slide-to="1" aria-label="Slide 2"></button>
+		<button type="button" data-bs-target="#carouselEcoRide" data-bs-slide-to="2" aria-label="Slide 3"></button>
+		<button type="button" data-bs-target="#carouselEcoRide" data-bs-slide-to="3" aria-label="Slide 4"></button>
+	</div>
+
+	<div
+		class="carousel-inner">
+		{# === SLIDE 1 === #}
+		<div class="carousel-item active position-relative">
+			<img src="{{ asset('assets/images/slide/ecoride-banner-1.jpg') }}" class="d-block w-100 rounded hero-img" alt="EcoRide - Covoiturage responsable">
+			<div class="position-absolute top-0 start-0 w-100 h-100">
+				<div class="container h-100">
+					<div class="row h-100">
+						<div class="col-12 col-lg-8 d-flex flex-column justify-content-center">
+							<h2 class="display-6 lh-sm mb-2 text-shadow">
+								<span class="d-block text-primary fw-extra">Partagez la route</span>
+								<span class="d-block text-secondary fw-extra bg-white bg-opacity-50 rounded px-2 py-1">réduisez votre empreinte</span>
+							</h2>
+							<p class="lead text-secondary mb-0 bg-white bg-opacity-50 px-2 py-1 rounded fw-bold">
+								Avec EcoRide, chaque trajet compte pour votre budget et pour la planète.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# === SLIDE 2 === #}
+		<div class="carousel-item position-relative">
+			<img src="{{ asset('assets/images/slide/ecoride-banner-1.jpg') }}" class="d-block w-100 rounded hero-img" alt="EcoRide - Communauté de confiance">
+			<div class="position-absolute top-0 start-0 w-100 h-100">
+				<div class="container h-100">
+					<div class="row h-100">
+						<div class="col-12 col-lg-8 d-flex flex-column justify-content-center">
+							<h2 class="display-6 lh-sm mb-2 text-shadow">
+								<span class="d-block text-primary fw-extra">Trajets fiables</span>
+								<span class="d-block text-secondary fw-extra bg-white bg-opacity-50 rounded px-2 py-1">communauté de confiance</span>
+							</h2>
+							<p class="lead text-secondary mb-0 bg-white bg-opacity-50 px-2 py-1 rounded fw-bold">
+								Profils vérifiés, avis transparents et messagerie intégrée pour voyager serein.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# === SLIDE 3 === #}
+		<div class="carousel-item position-relative">
+			<img src="{{ asset('assets/images/slide/ecoride-banner-1.jpg') }}" class="d-block w-100 rounded hero-img" alt="EcoRide - Économies & écologie">
+			<div class="position-absolute top-0 start-0 w-100 h-100">
+				<div class="container h-100">
+					<div class="row h-100">
+						<div class="col-12 col-lg-8 d-flex flex-column justify-content-center">
+							<h2 class="display-6 lh-sm mb-2 text-shadow">
+								<span class="d-block text-primary fw-extra">Divisez vos frais</span>
+								<span class="d-block text-secondary fw-extra bg-white bg-opacity-50 rounded px-2 py-1">pas votre confort</span>
+							</h2>
+							<p class="lead text-secondary mb-0 bg-white bg-opacity-50 px-2 py-1 rounded fw-bold">
+								Partagez les coûts, réduisez les émissions. Simple, économique, écologique.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# === SLIDE 4 === #}
+		<div class="carousel-item position-relative">
+			<img src="{{ asset('assets/images/slide/ecoride-banner-1.jpg') }}" class="d-block w-100 rounded hero-img" alt="EcoRide - Publiez ou trouvez un trajet">
+			<div class="position-absolute top-0 start-0 w-100 h-100">
+				<div class="container h-100">
+					<div class="row h-100">
+						<div class="col-12 col-lg-8 d-flex flex-column justify-content-center">
+							<h2 class="display-6 lh-sm mb-2 text-shadow">
+								<span class="d-block text-primary fw-extra">Trouvez un trajet</span>
+								<span class="d-block text-secondary fw-extra bg-white bg-opacity-50 rounded px-2 py-1">ou publiez en 2 clics</span>
+							</h2>
+							<p class="lead text-secondary mb-0 bg-white bg-opacity-50 px-2 py-1 rounded fw-bold">
+								Entrez votre itinéraire, choisissez l’horaire et c’est parti avec EcoRide.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<button class="carousel-control-prev" type="button" data-bs-target="#carouselEcoRide" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Précédent</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#carouselEcoRide" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Suivant</span>
+	</button>
+</div>
+
+<style>
+	.fw-extra {
+		font-weight: 900;
+	}
+	.text-shadow {
+		text-shadow: 0 2px 8px rgba(0, 0, 0, .45);
+	}
+	.hero-img {
+		opacity: .75;
+		max-height: 520px;
+		object-fit: cover;
+	}
+	@media(min-width: 992px) {
+		.hero-img {
+			max-height: 600px;
+		}
+	}
+</style>
+

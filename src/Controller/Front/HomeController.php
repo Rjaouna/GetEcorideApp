@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends BaseController
 {
-    #[Route('/front/home', name: 'app_front_home')]
+    #[Route('/', name: 'app_front_home')]
     public function index(): Response
     {
         if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_EMPLOYE')) {
