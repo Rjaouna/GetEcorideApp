@@ -46,91 +46,67 @@ final class MeProfileController extends AbstractController
 	 * Interdits ici: email, roles, password, isLocked, isVerified, etc.
 	 */
 	#[Route('/me/profile', name: 'api_me_profile_update', methods: ['PATCH'])]
-	public function updateMe(Request $request, SerializerInterface $serializer): JsonResponse
+	public function updateMe(Request $request, EntityManagerInterface $em): JsonResponse
 	{
 		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
 		/** @var User $me */
 		$me = $this->getUser();
 
-		$data = json_decode($request->getContent(), true) ?? [];
-
-		// Récupération des champs autorisés
-		$firstName   = $data['firstName']   ?? null;
-		$lastName    = $data['lastName']    ?? null;
-		$pseudo      = $data['pseudo']      ?? null;
-		$phone       = $data['phone']       ?? null;
-		$address     = $data['address']     ?? null;
-		$dateOfBirth = $data['dateOfBirth'] ?? null; // 'YYYY-MM-DD'
-
-		// Petites validations basiques (tu peux remplacer par Validator si besoin)
-		$errors = [];
-
-		if ($firstName !== null && \mb_strlen($firstName) > 50) {
-			$errors['firstName'] = 'Doit faire 50 caractères maximum.';
-		}
-		if ($lastName !== null && \mb_strlen($lastName) > 50) {
-			$errors['lastName'] = 'Doit faire 50 caractères maximum.';
-		}
-		if ($pseudo !== null && \mb_strlen($pseudo) > 20) {
-			$errors['pseudo'] = 'Doit faire 20 caractères maximum.';
-		}
-		if ($phone !== null && \mb_strlen($phone) > 20) {
-			$errors['phone'] = 'Doit faire 20 caractères maximum.';
-		}
-		if ($address !== null && \mb_strlen($address) > 500) {
-			$errors['address'] = 'Doit faire 500 caractères maximum.';
-		}
-		if ($dateOfBirth !== null && $dateOfBirth !== '') {
-			$dob = \DateTimeImmutable::createFromFormat('Y-m-d', $dateOfBirth);
-			$dobErrors = \DateTimeImmutable::getLastErrors();
-			if (!$dob || $dobErrors['warning_count'] || $dobErrors['error_count']) {
-				$errors['dateOfBirth'] = 'Format attendu: YYYY-MM-DD.';
-			}
-		}
-
-		if (!empty($errors)) {
-			return $this->json([
-				'message' => 'Certaines valeurs sont invalides.',
-				'errors'  => $errors,
-			], Response::HTTP_UNPROCESSABLE_ENTITY);
-		}
-
-		// Application des changements
-		if ($firstName !== null) {
-			$me->setFirstName($firstName ?: null);
-		}
-		if ($lastName !== null) {
-			$me->setLastName($lastName ?: null);
-		}
-		if ($pseudo !== null) {
-			$me->setPseudo($pseudo ?: null);
-		}
-		if ($phone !== null) {
-			$me->setPhone($phone ?: null);
-		}
-		if ($address !== null) {
-			$me->setAddress($address ?: null);
-		}
-		if ($dateOfBirth !== null) {
-			if ($dateOfBirth === '') {
-				$me->setDateOfBirth(null);
-			} else {
-				$me->setDateOfBirth(\DateTimeImmutable::createFromFormat('Y-m-d', $dateOfBirth));
-			}
-		}
-
-		$this->em->flush();
-
-		// Optionnel: si firewall stateful, relog pour refresh token storage
 		try {
-			$this->security->login($me);
-		} catch (\Throwable) {
+			$data = $request->toArray(); // nécessite header Content-Type: application/json
+		} catch (\Throwable $e) {
+			return $this->json(['message' => 'Payload JSON invalide'], 400);
 		}
 
+		// Champs autorisés uniquement
+		$allowed = ['firstName', 'lastName', 'pseudo', 'phone', 'address', 'dateOfBirth'];
+		foreach ($allowed as $k) {
+			if (!\array_key_exists($k, $data)) continue;
+			$val = $data[$k];
+
+			if ($k === 'dateOfBirth') {
+				if ($val === null || $val === '') {
+					$me->setDateOfBirth(null);
+				} else {
+					try {
+						// attend 'YYYY-MM-DD'
+						$me->setDateOfBirth(new \DateTimeImmutable($val));
+					} catch (\Throwable) {
+						return $this->json(['message' => 'dateOfBirth invalide (format attendu: YYYY-MM-DD)'], 422);
+					}
+				}
+				continue;
+			}
+
+			// setters simples
+			match ($k) {
+				'firstName' => $me->setFirstName($val ?: null),
+				'lastName'  => $me->setLastName($val ?: null),
+				'pseudo'    => $me->setPseudo($val ?: null),
+				'phone'     => $me->setPhone($val ?: null),
+				'address'   => $me->setAddress($val ?: null),
+				default     => null,
+			};
+		}
+
+		try {
+			$em->flush();
+		} catch (\Throwable $e) {
+			return $this->json(['message' => 'Impossible d’enregistrer le profil'], 500);
+		}
+
+		// Réponse safe (pas l’entité brute)
 		return $this->json([
-			'message' => 'Profil mis à jour.',
-			'user'    => $serializer->normalize($me, 'json', ['groups' => ['profile:read']]),
-		], Response::HTTP_OK);
+			'user' => [
+				'id' => $me->getId(),
+				'firstName' => $me->getFirstName(),
+				'lastName' => $me->getLastName(),
+				'pseudo' => $me->getPseudo(),
+				'phone' => $me->getPhone(),
+				'address' => $me->getAddress(),
+				'email' => $me->getEmail(),
+				'dateOfBirth' => $me->getDateOfBirth()?->format('Y-m-d'),
+			]
+		], 200);
 	}
 }

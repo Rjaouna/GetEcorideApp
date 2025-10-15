@@ -105,6 +105,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?DriverPreferences $driverPreferences = null;
+
 
 
     public function __construct()
@@ -366,6 +369,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getDriverPreferences(): ?DriverPreferences
+    {
+        return $this->driverPreferences;
+    }
+
+    public function setDriverPreferences(?DriverPreferences $driverPreferences): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($driverPreferences === null && $this->driverPreferences !== null) {
+            $this->driverPreferences->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($driverPreferences !== null && $driverPreferences->getUser() !== $this) {
+            $driverPreferences->setUser($this);
+        }
+
+        $this->driverPreferences = $driverPreferences;
 
         return $this;
     }

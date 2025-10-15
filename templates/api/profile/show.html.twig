@@ -17,6 +17,9 @@
 			{% include 'api/profile/components/_user.html.twig' %}
 			{% include 'api/profile/components/_vehicles.html.twig' %}
 {% include 'api/profile/components/_carpoolings.html.twig' %}
+{% include 'api/profile/components/_user_preferences.html.twig' %}
+
+
 
 		</div>
 	</div>
@@ -39,7 +42,119 @@
 	</script>
 
 
+
 	 <script src="{{ asset('js/profile.js') }}"></script>
+
+
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <script>
+(() => {
+  const oc   = document.getElementById('offcanvasPrefs');
+  const form = document.getElementById('prefs-user-form');
+  const flash = document.getElementById('prefs-flash');
+
+  // Endpoints depuis les data-* du offcanvas
+  const GET_URL   = oc?.dataset.prefsGet;   // GET prefs + user
+  const SAVE_USER = oc?.dataset.userSave;   // PATCH user
+  const SAVE_PREF = oc?.dataset.prefsSave;  // POST/PATCH prefs
+
+  // Champs USER
+  const $firstName = document.getElementById('me-firstName');
+  const $lastName  = document.getElementById('me-lastName');
+  const $pseudo    = document.getElementById('me-pseudo');
+  const $phone     = document.getElementById('me-phone');
+  const $address   = document.getElementById('me-address');
+  const $dob       = document.getElementById('me-dob');
+  const $email     = document.getElementById('me-email');
+
+  // PREFS
+  const $smoking = document.getElementById('pref-smoking');
+  const $pets    = document.getElementById('pref-pets');
+
+  let currentPrefId = null;
+
+  function setFlash(msg, type='success') {
+    if (!flash) return;
+    flash.classList.remove('d-none', 'alert-success', 'alert-danger', 'alert-warning', 'alert-info');
+    flash.classList.add('alert-' + type);
+    flash.innerHTML = msg;
+  }
+  function clearFlash() {
+    flash?.classList.add('d-none');
+    if (flash) flash.textContent = '';
+  }
+
+  // Pré-fill depuis /api/user/preferences (renvoie aussi user minimal)
+  async function loadForEdit() {
+    clearFlash();
+    try {
+      const { data } = await axios.get(GET_URL, { headers: { Accept: 'application/json' } });
+      // Prefs
+      currentPrefId = data.id ?? null;
+      if ($smoking) $smoking.checked = !!data.smokingAllowed;
+      if ($pets)    $pets.checked    = !!data.petsAllowed;
+
+      // User
+      const u = data.user || {};
+      if ($firstName) $firstName.value = u.firstName ?? '';
+      if ($lastName)  $lastName.value  = u.lastName  ?? '';
+      if ($pseudo)    $pseudo.value    = u.pseudo    ?? '';
+      if ($phone)     $phone.value     = u.phone     ?? '';
+      if ($address)   $address.value   = u.address   ?? '';
+      if ($dob)       $dob.value       = u.dateOfBirth ?? ''; // 'YYYY-MM-DD'
+      if ($email)     $email.value     = u.email ?? '';
+
+    } catch (e) {
+      setFlash('<strong>Erreur :</strong> impossible de charger les données.', 'danger');
+      console.error(e);
+    }
+  }
+
+  // Sauvegarde combinée : PATCH user + POST/PATCH prefs
+  async function saveAll(e) {
+    e?.preventDefault?.();
+    clearFlash();
+
+    const payloadUser = {
+      firstName:   $firstName?.value || null,
+      lastName:    $lastName?.value  || null,
+      pseudo:      $pseudo?.value    || null,
+      phone:       $phone?.value     || null,
+      address:     $address?.value   || null,
+      dateOfBirth: $dob?.value       || null, // 'YYYY-MM-DD'
+    };
+    const payloadPrefs = {
+      id: currentPrefId, // utile si ton contrôleur fait un update ciblé
+      smokingAllowed: $smoking?.checked ?? false,
+      petsAllowed:    $pets?.checked    ?? false,
+    };
+
+    // Envoie les deux en parallèle (et gère erreurs séparées si besoin)
+    try {
+      const [userRes, prefsRes] = await Promise.all([
+        axios.patch(SAVE_USER, payloadUser, { headers: {'Content-Type':'application/json', Accept:'application/json'} }),
+        axios.post(SAVE_PREF,  payloadPrefs, { headers: {'Content-Type':'application/json', Accept:'application/json'} }),
+      ]);
+
+      setFlash('<strong>Succès :</strong> profil et préférences mis à jour.', 'success');
+    } catch (e) {
+      const s = e?.response?.status;
+      const m = e?.response?.data?.message || 'Erreur lors de la sauvegarde.';
+      setFlash(`${s ? '['+s+'] ' : ''}${m}`, 'danger');
+      console.error(e);
+    }
+  }
+
+  // Ouvre l’offcanvas -> pré-remplit
+  oc?.addEventListener('show.bs.offcanvas', loadForEdit);
+  form?.addEventListener('submit', saveAll);
+})();
+</script>
+
+
+
+
+
 
 
 {% endblock %}

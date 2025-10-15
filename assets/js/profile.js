@@ -236,11 +236,12 @@
                 "—";
             userEl.innerHTML = `
         <div class="position-relative border rounded-3 p-3 bg-white mb-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 edit-user" data-id="${
+          <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPrefs" aria-controls="offcanvasPrefs" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 edit-user" data-id="${
               user.id
           }" title="Modifier le profil">
-            <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"><i class="bi bi-pencil"></i></a>
+            <i class="bi bi-gear"></i>
           </button>
+		  
           <div class="row gy-2">
             <div class="col-12 col-md-6"><strong>Nom :</strong> ${fullName}</div>
             <div class="col-12 col-md-6"><strong>Pseudo :</strong> ${txt(

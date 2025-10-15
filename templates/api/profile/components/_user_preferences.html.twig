@@ -1,0 +1,79 @@
+{# Offcanvas Préférences + Profil #}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasPrefs" aria-labelledby="offcanvasPrefsLabel" data-prefs-get="{{ path('app_api_user_preferences') }}" data-user-save="{{ path('api_me_profile_update') }}" {# PATCH profil #} data-prefs-save="{{ path('app_api_user_preferences_edit') }}" {# POST/PATCH prefs #}>
+	<div class="offcanvas-header">
+		<h5 class="offcanvas-title" id="offcanvasPrefsLabel">Profil & préférences</h5>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+	</div>
+
+	<div class="offcanvas-body">
+		<div id="prefs-flash" class="alert d-none"></div>
+
+		<form
+			id="prefs-user-form" class="vstack gap-3">
+
+			{# --- USER --- #}
+			<fieldset>
+				<legend class="h6 mb-2">Informations utilisateur</legend>
+
+				<div class="row g-2">
+					<div class="col-md-6">
+						<label class="form-label" for="me-firstName">Prénom</label>
+						<input class="form-control" id="me-firstName" name="firstName" maxlength="50">
+					</div>
+					<div class="col-md-6">
+						<label class="form-label" for="me-lastName">Nom</label>
+						<input class="form-control" id="me-lastName" name="lastName" maxlength="50">
+					</div>
+				</div>
+
+				<div class="row g-2">
+					<div class="col-md-6">
+						<label class="form-label" for="me-pseudo">Pseudo</label>
+						<input class="form-control" id="me-pseudo" name="pseudo" maxlength="20">
+					</div>
+					<div class="col-md-6">
+						<label class="form-label" for="me-phone">Téléphone</label>
+						<input class="form-control" id="me-phone" name="phone" maxlength="20">
+					</div>
+				</div>
+
+				<div class="mb-2">
+					<label class="form-label" for="me-address">Adresse</label>
+					<input class="form-control" id="me-address" name="address" maxlength="500">
+				</div>
+
+				<div class="row g-2">
+					<div class="col-md-6">
+						<label class="form-label" for="me-dob">Date de naissance</label>
+						<input class="form-control" id="me-dob" name="dateOfBirth" type="date">
+					</div>
+					<div class="col-md-6">
+						<label class="form-label">Email (non modifiable)</label>
+						<input class="form-control" id="me-email" disabled>
+					</div>
+				</div>
+			</fieldset>
+
+			{# --- PREFS --- #}
+			<fieldset class="mt-2">
+				<legend class="h6">Préférences conducteur</legend>
+
+				<div class="form-check form-switch mb-2">
+					<input class="form-check-input" type="checkbox" id="pref-smoking">
+					<label class="form-check-label" for="pref-smoking">Autoriser les fumeurs</label>
+				</div>
+
+				<div class="form-check form-switch mb-3">
+					<input class="form-check-input" type="checkbox" id="pref-pets">
+					<label class="form-check-label" for="pref-pets">Autoriser les animaux</label>
+				</div>
+			</fieldset>
+
+			<div class="d-flex gap-2">
+				<button type="submit" id="prefs-save" class="btn btn-primary">Enregistrer</button>
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Annuler</button>
+			</div>
+		</form>
+	</div>
+</div>
+
