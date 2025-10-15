@@ -11,13 +11,19 @@
 		<div id="switch-flash" class="alert alert-warning d-none mt-2"></div>
 
 		{# Bannière driver/passager #}
-		{% include 'api/profile/components/_banner.html.twig' %}
+{% include 'api/profile/components/switch_mode/_switch_mode.html.twig' %}
+
+
 
 		<div id="profile-box" data-url="{{ path('app_profile', { id: userId }) }}">
-			{% include 'api/profile/components/_user.html.twig' %}
-			{% include 'api/profile/components/_vehicles.html.twig' %}
-{% include 'api/profile/components/_carpoolings.html.twig' %}
-{% include 'api/profile/components/_user_preferences.html.twig' %}
+{% include 'api/profile/components/user/_user_details.html.twig' %}
+
+
+{% include 'api/profile/components/voiture/_vehicles.html.twig' %}
+{% include 'api/profile/components/covoiturage/_carpoolings.html.twig' %}
+{% include 'api/profile/components/user/_user_preferences.html.twig' %}
+
+
 
 
 
@@ -25,7 +31,9 @@
 	</div>
 
 	{# Modal ajout véhicule #}
-{% include 'api/profile/components/_add_vehicle_modal.html.twig' %}
+{% include 'api/profile/components/voiture/_add_vehicle_modal.html.twig' %}
+
+
 
 
 {# JS #}

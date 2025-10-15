@@ -107,21 +107,7 @@ final class ProfileController extends AbstractController
         ], Response::HTTP_OK);
     }
 
-    /**
-     * Vue Twig.
-     */
-    #[Route('/profile-view', name: 'profile_view', methods: ['GET'])]
-    public function view(): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        /** @var User $me */
-        $me = $this->getUser();
-
-        return $this->render('api/profile/show.html.twig', [
-            'userId' => $me->getId(),
-        ]);
-    }
 
     // ============ Helpers rôles ============
     private function toggleDriverPassager(array $roles): array

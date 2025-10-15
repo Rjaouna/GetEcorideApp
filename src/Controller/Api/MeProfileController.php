@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\DriverPreferences;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,12 +25,13 @@ final class MeProfileController extends AbstractController
 	 * Vue du profil (préremplie).
 	 */
 	#[Route('/profile-view', name: 'profile_view', methods: ['GET'])]
-	public function view(SerializerInterface $serializer): Response
+	public function view(SerializerInterface $serializer, EntityManagerInterface $em): Response
 	{
-		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+		// $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
 		/** @var User $me */
 		$me = $this->getUser();
+
 
 		// on normalise pour réutiliser côté twig (pré-remplissage)
 		$meNormalized = $serializer->normalize($me, 'json', ['groups' => ['profile:read']]);

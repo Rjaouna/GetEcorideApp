@@ -10,6 +10,7 @@
     const isDriverAlert = document.getElementById("isDriver");
     const vehiclesDiv = document.getElementById("vehicles-div");
     const carpoolDiv = document.getElementById("carpoolings-div");
+    const isDriverPref = document.getElementById("isDriverPref");
 
     // Modal refs
     const vehicleModalEl = document.getElementById("vehicleModal");
@@ -155,6 +156,7 @@
     `;
 
         const btn = document.getElementById("switch-role");
+
         btn?.addEventListener("click", async (e) => {
             e.preventDefault();
             hideFlash();
@@ -228,7 +230,8 @@
             });
 
             vehiclesDiv?.classList.toggle("d-none", !meta.isDriver);
-            carpoolDiv?.classList.toggle("d-none", !meta.isDriver);
+            vehiclesDiv?.classList.toggle("d-none", !meta.isDriver);
+            isDriverPref?.classList.toggle("d-none", !meta.isDriver);
 
             // USER
             const fullName =
