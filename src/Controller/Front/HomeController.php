@@ -17,14 +17,16 @@ final class HomeController extends BaseController
             return $this->redirectByRole();
         }
         $me = $this->getUser();
-        if (!$me->getDriverPreferences()) {
-            if (!$isDriver = \in_array('ROLE_DRIVER', $me->getRoles(), true)) {
-                $newRef = new DriverPreferences();
-                $newRef->setUser($me)
-                    ->setSmokingAllowed(false)
-                    ->setPetsAllowed(false);
-                $em->persist($newRef);
-                $em->flush();
+        if ($me) {
+            if (!$me->getDriverPreferences()) {
+                if (!$isDriver = \in_array('ROLE_DRIVER', $me->getRoles(), true)) {
+                    $newRef = new DriverPreferences();
+                    $newRef->setUser($me)
+                        ->setSmokingAllowed(false)
+                        ->setPetsAllowed(false);
+                    $em->persist($newRef);
+                    $em->flush();
+                }
             }
         }
 
