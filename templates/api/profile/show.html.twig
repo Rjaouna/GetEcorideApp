@@ -54,6 +54,19 @@
 
 	 <script src="{{ asset('js/profile.js') }}"></script>
 
+ <script>
+  window.PROFILE_ROUTES = {
+    ...(window.PROFILE_ROUTES || {}),
+    profileUrl: "{{ path('app_profile', { id: userId }) }}",
+    switchRoleUrl: "{{ path('me_switch_role') }}",
+    vehicleCreateUrl: "{{ path('api_vehicle_create') }}",
+
+    // ✅ Token CSRF avec l’intention utilisée côté controller
+    vehicleDeleteCsrf: "{{ csrf_token('vehicle_delete')|e('js') }}"
+  };
+</script>
+
+
 
  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
  <script>

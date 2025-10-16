@@ -84,18 +84,15 @@ final class VehicleController extends AbstractController
 	{
 		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-		// Trouver le véhicule à la main (au lieu du ParamConverter)
 		$vehicle = $this->em->getRepository(Vehicle::class)->find($id);
 		if (!$vehicle) {
 			return $this->json(['message' => 'Véhicule introuvable'], 404);
 		}
-
-		// Vérifie que l'utilisateur est proprio
 		if ($vehicle->getOwner() !== $this->getUser()) {
 			return $this->json(['message' => 'Accès interdit'], 403);
 		}
 
-		// CSRF depuis l’en-tête
+		// ✅ Intention "vehicle_delete" (doit matcher Twig/JS)
 		$token = $request->headers->get('X-CSRF-TOKEN');
 		if (!$this->isCsrfTokenValid('vehicle_delete', $token)) {
 			return $this->json(['message' => 'CSRF invalide'], 403);
@@ -104,7 +101,6 @@ final class VehicleController extends AbstractController
 		$this->em->remove($vehicle);
 		$this->em->flush();
 
-		// Tu peux renvoyer 204 si tu veux
 		return $this->json(['message' => 'Véhicule supprimé'], 200);
 	}
 }

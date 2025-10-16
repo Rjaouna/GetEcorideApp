@@ -17,6 +17,7 @@ class Vehicle extends AbstractEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['profile:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]

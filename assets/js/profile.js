@@ -290,24 +290,17 @@
           <strong>Places :</strong> ${txt(v.seats)}
           ${
               v.isElectric
-                  ? '<span class="badge bg-success ms-2">Électrique</span>'
+                  ? '<span class="badge bg-success ms-2 text-primary">Électrique</span>'
                   : ""
           }
         </div>
-        <div class="small">
-          <strong>Statut :</strong>
-          ${
-              v.isActive
-                  ? '<span class="badge bg-primary">Actif</span>'
-                  : '<span class="badge bg-secondary">Inactif</span>'
-          }
-        </div>
+       
       </div>
     </div>
         `
                   )
                   .join("")
-            : `<div class="col-12"><div class="alert alert-info">Aucun véhicule pour le moment. Cliquez sur <strong>Ajouter</strong>.</div></div>`;
+            : `</div>`;
     }
 
     // --- UI: Rendu des covoiturages ---
