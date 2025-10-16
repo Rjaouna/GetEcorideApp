@@ -64,13 +64,18 @@
     }
 
     function openVehicleModal() {
+        const el = document.getElementById("vehicleModal");
         const form = document.getElementById("vehicle-form");
         const err = document.getElementById("vehicle-error");
         form?.reset();
         err?.classList.add("d-none");
         if (err) err.textContent = "";
-        vehicleModal?.show();
+
+        const bs = window.bootstrap;
+        if (!bs?.Modal) return; // sécurité
+        bs.Modal.getOrCreateInstance(el).show();
     }
+
 
     // --- Sauvegarde véhicule + éventuelle bascule vers driver (conditionnelle) ---
     async function saveVehicleAndMaybeSwitch() {
