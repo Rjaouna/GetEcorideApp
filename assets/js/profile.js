@@ -1,7 +1,13 @@
 (() => {
-    const { profileUrl, switchRoleUrl, vehicleCreateUrl } =
-        window.PROFILE_ROUTES || {};
+    // --- Routes (venant de Twig via window.PROFILE_ROUTES) ---
+    const {
+        profileUrl,
+        switchRoleUrl,
+        vehicleCreateUrl,
+        vehicleDeleteCsrf, // on le garde si tu l’as déjà côté Twig; sinon meta fallback plus bas
+    } = window.PROFILE_ROUTES || {};
 
+    // --- Références DOM ---
     const userEl = document.getElementById("user-content");
     const vehEl = document.getElementById("vehicles-content");
     const carpEl = document.getElementById("carpoolings-content");
@@ -12,13 +18,13 @@
     const carpoolDiv = document.getElementById("carpoolings-div");
     const isDriverPref = document.getElementById("isDriverPref");
 
-    // Modal refs
+    // --- Modal Bootstrap (fiable avec getOrCreateInstance) ---
     const vehicleModalEl = document.getElementById("vehicleModal");
     const vehicleModal = vehicleModalEl
-        ? new bootstrap.Modal(vehicleModalEl)
+        ? bootstrap.Modal.getOrCreateInstance(vehicleModalEl)
         : null;
 
-    // helpers fmt...
+    // --- Helpers ---
     const fmtDate = (iso) =>
         iso
             ? new Intl.DateTimeFormat("fr-FR", {
@@ -27,6 +33,7 @@
                   timeZone: "Europe/Paris",
               }).format(new Date(iso))
             : "—";
+
     const money = (n) =>
         n == null
             ? "—"
@@ -34,6 +41,7 @@
                   style: "currency",
                   currency: "EUR",
               }).format(n);
+
     const txt = (v) => v ?? "—";
 
     function showFlash(message, type = "warning") {
@@ -48,9 +56,11 @@
         flashEl.classList.add("alert-" + type);
         flashEl.innerHTML = message;
     }
+
     function hideFlash() {
-        flashEl?.classList.add("d-none");
-        if (flashEl) flashEl.textContent = "";
+        if (!flashEl) return;
+        flashEl.classList.add("d-none");
+        flashEl.textContent = "";
     }
 
     function openVehicleModal() {
@@ -62,6 +72,7 @@
         vehicleModal?.show();
     }
 
+    // --- Sauvegarde véhicule + éventuelle bascule vers driver (conditionnelle) ---
     async function saveVehicleAndMaybeSwitch() {
         const plate = document.getElementById("vehicle-plate").value.trim();
         const firstReg = document.getElementById("vehicle-firstReg").value;
@@ -90,9 +101,10 @@
             errBox.innerHTML = errs.map((x) => `<div>${x}</div>`).join("");
             return;
         }
-        btn?.classList.add("disabled");
 
+        btn?.classList.add("disabled");
         try {
+            // 1) Création du véhicule
             await axios.post(
                 vehicleCreateUrl,
                 {
@@ -111,21 +123,31 @@
                     },
                 }
             );
+
             vehicleModal?.hide();
             showFlash("<strong>Succès :</strong> véhicule ajouté.", "success");
-            await loadProfile();
-            try {
+
+            // 2) Vérifier le mode actuel APRÈS l'ajout
+            const { data } = await axios.get(profileUrl, {
+                headers: { Accept: "application/json" },
+            });
+            const isDriverNow = !!data.meta?.isDriver;
+
+            // 3) Si on est passager -> activer driver. Si déjà driver -> ne rien faire.
+            if (!isDriverNow) {
                 await axios.post(
                     switchRoleUrl,
                     {},
                     { headers: { Accept: "application/json" } }
                 );
-                await loadProfile();
                 showFlash(
                     "<strong>Succès :</strong> mode driver activé.",
                     "success"
                 );
-            } catch {}
+            }
+
+            // 4) Recharger l’UI
+            await loadProfile();
         } catch (e) {
             const status = e?.response?.status;
             const msg =
@@ -138,10 +160,14 @@
         }
     }
 
+    // --- UI: Bandeau mode driver/passager ---
     function renderBanner({ isDriver, cars, active }) {
+        if (!isDriverAlert) return;
+
         isDriverAlert.classList.toggle("alert-success", isDriver);
         isDriverAlert.classList.toggle("alert-warning", !isDriver);
         isDriverAlert.classList.remove("alert-secondary");
+
         isDriverAlert.innerHTML = `
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       <strong>${isDriver ? "Mode driver activé !" : "Mode passager"}</strong>
@@ -155,8 +181,8 @@
       <a href="#" id="switch-role" class="alert-link ms-2">Basculer de mode</a>.
     `;
 
+        // Bind du switch (créé dynamiquement)
         const btn = document.getElementById("switch-role");
-
         btn?.addEventListener("click", async (e) => {
             e.preventDefault();
             hideFlash();
@@ -181,6 +207,7 @@
                 const status = err?.response?.status;
                 const apiMsg = err?.response?.data?.message;
                 const action = err?.response?.data?.action;
+
                 if (status === 422) {
                     if (action?.type === "modal") openVehicleModal();
                     const cta = `<button type="button" class="btn btn-sm btn-primary ms-2" id="open-add-vehicle">Ajouter un véhicule</button>`;
@@ -212,6 +239,137 @@
         });
     }
 
+    // --- UI: Rendu des véhicules (grille) ---
+    function renderVehicles(vehicles) {
+        const list = Array.isArray(vehicles) ? vehicles : [];
+        if (!vehEl) return;
+
+        // Option : mettre à jour un compteur si présent dans le header
+        const countEl = document.getElementById("vehicles-count");
+        if (countEl) countEl.textContent = String(list.length);
+
+        const emptyEl = document.getElementById("vehicles-empty");
+        if (emptyEl) emptyEl.classList.toggle("d-none", list.length > 0);
+
+        vehEl.classList.add("row", "g-3"); // pour grille responsive
+        vehEl.innerHTML = list.length
+            ? list
+                  .map(
+                      (v) => `
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="border rounded-3 p-3 bg-body-tertiary h-100 position-relative">
+        <div class="position-absolute top-0 end-0 m-2 d-flex gap-2">
+          <!-- Modifier (existant, récup id pareil via data-id) -->
+          <button type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  data-action="edit-vehicle"
+                  data-id="${v.id}"
+                  title="Modifier">
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <!-- Supprimer (simple) -->
+          <button type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  data-action="delete-vehicle"
+                  data-id="${v.id}"
+                  title="Supprimer">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+        <div class="mb-2">
+          <strong>${txt(v.brand)} ${txt(v.model)}</strong>
+          <span class="text-muted ms-2">• ${txt(v.plateNumber)}</span>
+        </div>
+
+        <div class="small"><strong>Mise en circ. :</strong> ${fmtDate(
+            v.firstRegistrationAt
+        )}</div>
+        <div class="small">
+          <strong>Places :</strong> ${txt(v.seats)}
+          ${
+              v.isElectric
+                  ? '<span class="badge bg-success ms-2">Électrique</span>'
+                  : ""
+          }
+        </div>
+        <div class="small">
+          <strong>Statut :</strong>
+          ${
+              v.isActive
+                  ? '<span class="badge bg-primary">Actif</span>'
+                  : '<span class="badge bg-secondary">Inactif</span>'
+          }
+        </div>
+      </div>
+    </div>
+        `
+                  )
+                  .join("")
+            : `<div class="col-12"><div class="alert alert-info">Aucun véhicule pour le moment. Cliquez sur <strong>Ajouter</strong>.</div></div>`;
+    }
+
+    // --- UI: Rendu des covoiturages ---
+    function renderCarpools(carp) {
+        const list = Array.isArray(carp) ? carp : [];
+        if (!carpEl) return;
+
+        carpEl.innerHTML = list.length
+            ? list
+                  .map((c) => {
+                      const seats = `${
+                          c.seatsAvaible ?? c.seatsAvailable ?? "—"
+                      } / ${c.seatsTotal ?? "—"}`;
+                      const eco = c.ecoTag
+                          ? '<span class="badge bg-success ms-2">Éco</span>'
+                          : "";
+                      const badge = ((s) => {
+                          const k = (s || "").toLowerCase();
+                          if (k === "published") return "bg-success";
+                          if (k === "cancelled") return "bg-danger";
+                          return "bg-secondary";
+                      })(c.status);
+
+                      return `
+            <div class="border rounded-2 p-2 mb-2 bg-white">
+              <div class="d-flex align-items-center mb-1">
+                <strong class="me-2">${txt(c.deparatureCity)} → ${txt(
+                          c.arrivalCity
+                      )}</strong>
+                ${eco}
+                <div class="ms-auto d-flex align-items-center gap-2">
+                  <span class="badge ${badge}">${txt(c.status)}</span>
+                  <button type="button" class="btn btn-sm btn-outline-secondary edit-carp" data-id="${
+                      c.id
+                  }" title="Modifier ce covoiturage">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row gy-1">
+                <div class="col-12 col-md-4"><strong>Départ :</strong> ${fmtDate(
+                    c.deparatureAt
+                )}</div>
+                <div class="col-12 col-md-4"><strong>Arrivée :</strong> ${fmtDate(
+                    c.arrivalAt
+                )}</div>
+                <div class="col-12 col-md-4"><strong>Places :</strong> ${seats}</div>
+                <div class="col-12 col-md-4"><strong>Prix :</strong> ${money(
+                    c.price
+                )}</div>
+                <div class="col-12 col-md-8"><strong>Véhicule :</strong> ${txt(
+                    c?.vehicle?.plateNumber
+                )}</div>
+              </div>
+            </div>
+          `;
+                  })
+                  .join("")
+            : "Aucun covoiturage";
+    }
+
+    // --- Charger le profil + remplir l'UI ---
     async function loadProfile() {
         hideFlash();
         try {
@@ -229,7 +387,7 @@
                 active: meta.activeCarpoolings ?? 0,
             });
 
-            vehiclesDiv?.classList.toggle("d-none", !meta.isDriver);
+            // afficher zone véhicules uniquement en driver
             vehiclesDiv?.classList.toggle("d-none", !meta.isDriver);
             isDriverPref?.classList.toggle("d-none", !meta.isDriver);
 
@@ -237,125 +395,45 @@
             const fullName =
                 [user.firstName, user.lastName].filter(Boolean).join(" ") ||
                 "—";
-            userEl.innerHTML = `
-        <div class="position-relative border rounded-3 p-3 bg-white mb-2">
-          <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPrefs" aria-controls="offcanvasPrefs" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 edit-user" data-id="${
-              user.id
-          }" title="Modifier le profil">
-            <i class="bi bi-gear"></i>
-          </button>
-		  
-          <div class="row gy-2">
-            <div class="col-12 col-md-6"><strong>Nom :</strong> ${fullName}</div>
-            <div class="col-12 col-md-6"><strong>Pseudo :</strong> ${txt(
-                user.pseudo
-            )}</div>
-            <div class="col-12 col-md-6"><strong>Email :</strong> ${txt(
-                user.email
-            )}</div>
-            <div class="col-12 col-md-6"><strong>Téléphone :</strong> ${txt(
-                user.phone
-            )}</div>
-            <div class="col-12"><strong>Adresse :</strong> ${txt(
-                user.address
-            )}</div>
-            <div class="col-12 col-md-6"><strong>Date de naissance :</strong> ${fmtDate(
-                user.dateOfBirth
-            )}</div>
-          </div>
-        </div>
-      `;
+            if (userEl) {
+                userEl.innerHTML = `
+          <div class="position-relative border rounded-3 p-3 bg-white mb-2">
+            <button type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasPrefs"
+                    aria-controls="offcanvasPrefs"
+                    class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 edit-user"
+                    data-id="${user.id}" title="Modifier le profil">
+              <i class="bi bi-gear"></i>
+            </button>
 
-            // VEHICLES
-            const vehicles = Array.isArray(user.vehicles) ? user.vehicles : [];
-            vehEl.innerHTML = vehicles.length
-                ? vehicles
-                      .map(
-                          (v) => `
-        <div class="border rounded-2 p-2 mb-2 bg-white position-relative">
-          <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 edit-vehicle" data-id="${
-              v.id
-          }" title="Modifier ce véhicule">
-            <i class="bi bi-pencil"></i>
-          </button>
-          <div class="d-flex align-items-center mb-2">
-            <strong class="me-2">${txt(v.brand)} ${txt(v.model)}</strong>
-            <span class="text-muted">• ${txt(v.plateNumber)}</span>
-          </div>
-          <div><strong>Mise en circ. :</strong> ${fmtDate(
-              v.firstRegistrationAt
-          )}</div>
-          <div><strong>Places :</strong> ${txt(v.seats)} ${
-                              v.isElectric
-                                  ? '<span class="badge bg-success ms-2">Électrique</span>'
-                                  : ""
-                          }</div>
-          <div><strong>Statut :</strong> ${
-              v.isActive
-                  ? '<span class="badge bg-primary">Actif</span>'
-                  : '<span class="badge bg-secondary">Inactif</span>'
-          }</div>
-        </div>
-      `
-                      )
-                      .join("")
-                : "Aucun véhicule";
-
-            // CARPOOLINGS
-            const carp = Array.isArray(user.carpoolings)
-                ? user.carpoolings
-                : [];
-            carpEl.innerHTML = carp.length
-                ? carp
-                      .map((c) => {
-                          const seats = `${
-                              c.seatsAvaible ?? c.seatsAvailable ?? "—"
-                          } / ${c.seatsTotal ?? "—"}`;
-                          const eco = c.ecoTag
-                              ? '<span class="badge bg-success ms-2">Éco</span>'
-                              : "";
-                          const badge = ((s) => {
-                              const k = (s || "").toLowerCase();
-                              if (k === "published") return "bg-success";
-                              if (k === "cancelled") return "bg-danger";
-                              return "bg-secondary";
-                          })(c.status);
-                          return `
-          <div class="border rounded-2 p-2 mb-2 bg-white">
-            <div class="d-flex align-items-center mb-1">
-              <strong class="me-2">${txt(c.deparatureCity)} → ${txt(
-                              c.arrivalCity
-                          )}</strong>
-              ${eco}
-              <div class="ms-auto d-flex align-items-center gap-2">
-                <span class="badge ${badge}">${txt(c.status)}</span>
-                <button type="button" class="btn btn-sm btn-outline-secondary edit-carp" data-id="${
-                    c.id
-                }" title="Modifier ce covoiturage">
-                  <i class="bi bi-pencil"></i>
-                </button>
-              </div>
-            </div>
-            <div class="row gy-1">
-              <div class="col-12 col-md-4"><strong>Départ :</strong> ${fmtDate(
-                  c.deparatureAt
+            <div class="row gy-2">
+              <div class="col-12 col-md-6"><strong>Nom :</strong> ${fullName}</div>
+              <div class="col-12 col-md-6"><strong>Pseudo :</strong> ${txt(
+                  user.pseudo
               )}</div>
-              <div class="col-12 col-md-4"><strong>Arrivée :</strong> ${fmtDate(
-                  c.arrivalAt
+              <div class="col-12 col-md-6"><strong>Email :</strong> ${txt(
+                  user.email
               )}</div>
-              <div class="col-12 col-md-4"><strong>Places :</strong> ${seats}</div>
-              <div class="col-12 col-md-4"><strong>Prix :</strong> ${money(
-                  c.price
+              <div class="col-12 col-md-6"><strong>Téléphone :</strong> ${txt(
+                  user.phone
               )}</div>
-              <div class="col-12 col-md-8"><strong>Véhicule :</strong> ${txt(
-                  c?.vehicle?.plateNumber
+              <div class="col-12"><strong>Adresse :</strong> ${txt(
+                  user.address
+              )}</div>
+              <div class="col-12 col-md-6"><strong>Date de naissance :</strong> ${fmtDate(
+                  user.dateOfBirth
               )}</div>
             </div>
           </div>
         `;
-                      })
-                      .join("")
-                : "Aucun covoiturage";
+            }
+
+            // VEHICLES
+            renderVehicles(user.vehicles);
+
+            // CARPOOLINGS
+            renderCarpools(user.carpoolings);
         } catch (e) {
             let msg = "Erreur réseau";
             if (e.response) {
@@ -364,18 +442,93 @@
                 if (e.response.status === 403) msg += " — accès interdit";
                 if (e.response.status === 404) msg += " — profil introuvable";
             }
-            errEl.textContent = msg;
-            errEl.classList.remove("d-none");
-            userEl.textContent = "Impossible de charger les infos utilisateur.";
-            vehEl.textContent = "Impossible de charger les véhicules.";
-            carpEl.textContent = "Impossible de charger les covoiturages.";
+            if (errEl) {
+                errEl.textContent = msg;
+                errEl.classList.remove("d-none");
+            }
+            if (userEl)
+                userEl.textContent =
+                    "Impossible de charger les infos utilisateur.";
+            if (vehEl)
+                vehEl.textContent = "Impossible de charger les véhicules.";
+            if (carpEl)
+                carpEl.textContent = "Impossible de charger les covoiturages.";
         }
     }
 
+    // --- Écouteurs (attachés UNE SEULE FOIS) ---
+    // Bouton "Ajouter un véhicule" (dans le header Twig, via délégation sur #vehicles-div)
+    vehiclesDiv?.addEventListener("click", (e) => {
+        const addBtn = e.target.closest('[data-action="add-vehicle"]');
+        if (addBtn) {
+            e.preventDefault();
+            openVehicleModal();
+            return;
+        }
+    });
+
+    // SUPPRIMER (simple : on prend data-id et on call /api/vehicles/{id})
+    vehiclesDiv?.addEventListener("click", async (e) => {
+        const delBtn = e.target.closest('[data-action="delete-vehicle"]');
+        if (!delBtn) return;
+
+        e.preventDefault();
+        const id = delBtn.dataset.id;
+        console.debug(
+            "DELETE id=",
+            id,
+            "URL=",
+            `/api/vehicles/${encodeURIComponent(id)}`
+        );
+        if (!id) {
+            showFlash(
+                "<strong>Erreur :</strong> ID véhicule introuvable.",
+                "danger"
+            );
+            return;
+        }
+        if (!confirm("Supprimer ce véhicule ?")) return;
+
+        delBtn.classList.add("disabled");
+        const csrf =
+            window.PROFILE_ROUTES?.vehicleDeleteCsrf ||
+            document.querySelector('meta[name="csrf-token"]')?.content ||
+            "";
+
+        try {
+            await axios.delete(`/api/vehicles/${encodeURIComponent(id)}`, {
+                headers: {
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": csrf,
+                },
+            });
+            showFlash(
+                "<strong>Succès :</strong> véhicule supprimé.",
+                "success"
+            );
+            await loadProfile();
+        } catch (err) {
+            const status = err?.response?.status;
+            const msg =
+                err?.response?.data?.message || "Suppression impossible.";
+            showFlash(
+                `<strong>Erreur :</strong> ${
+                    status ? "[" + status + "] " : ""
+                }${msg}`,
+                "danger"
+            );
+        } finally {
+            delBtn.classList.remove("disabled");
+        }
+    });
+
+    // Bouton "Enregistrer" du modal véhicule
     document.getElementById("vehicle-save")?.addEventListener("click", (e) => {
         e.preventDefault();
         saveVehicleAndMaybeSwitch();
     });
 
+    // --- Boot ---
     loadProfile();
 })();
