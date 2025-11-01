@@ -108,12 +108,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?DriverPreferences $driverPreferences = null;
 
+    /**
+     * @var Collection<int, Carpooling>
+     */
+    #[ORM\ManyToMany(targetEntity: Carpooling::class, mappedBy: 'participants')]
+
+    private Collection $covoiturages;
+
 
 
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
         $this->carpoolings = new ArrayCollection();
+        $this->covoiturages = new ArrayCollection();
     }
     // -----------------------------------
 
@@ -391,6 +399,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->driverPreferences = $driverPreferences;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carpooling>
+     */
+    public function getCovoiturages(): Collection
+    {
+        return $this->covoiturages;
+    }
+
+    public function addCovoiturage(Carpooling $covoiturage): static
+    {
+        if (!$this->covoiturages->contains($covoiturage)) {
+            $this->covoiturages->add($covoiturage);
+            $covoiturage->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCovoiturage(Carpooling $covoiturage): static
+    {
+        if ($this->covoiturages->removeElement($covoiturage)) {
+            $covoiturage->removeParticipant($this);
+        }
 
         return $this;
     }

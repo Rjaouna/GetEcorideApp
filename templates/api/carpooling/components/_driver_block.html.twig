@@ -1,0 +1,36 @@
+ <script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const id = {{ id ?? 'null' }};
+  if (!id) return;
+
+  const container = document.getElementById('driver-block');
+const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0', `/${id}`);
+
+  try {
+const response = await fetch(carpoolingUrl);
+
+
+
+    const ride = await response.json();
+    const driver = ride.driver;
+
+    container.innerHTML = `
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><i class="bi bi-person-fill text-primary"></i> Conducteur</h5>
+        </div>
+        <div class="card-body">
+          ${driver ? `
+            <p><strong>Nom :</strong> ${driver.firstName} ${driver.lastName}</p>
+            <p><strong>Email :</strong> ${driver.email ?? '—'}</p>
+            <p><strong>Téléphone :</strong> ${driver.phone ?? '—'}</p>
+          ` : '<p class="text-muted mb-0">Conducteur non défini.</p>'}
+        </div>
+      </div>
+    `;
+  } catch (error) {
+    container.innerHTML = `<div class="alert alert-danger text-center">Erreur de chargement du conducteur.</div>`;
+  }
+});
+</script>
+
