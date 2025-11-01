@@ -50,9 +50,10 @@ final class MeProfileController extends AbstractController
 	#[Route('/me/profile', name: 'api_me_profile_update', methods: ['PATCH'])]
 	public function updateMe(Request $request, EntityManagerInterface $em): JsonResponse
 	{
-		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+		// $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 		/** @var User $me */
 		$me = $this->getUser();
+
 
 		try {
 			$data = $request->toArray(); // nécessite header Content-Type: application/json

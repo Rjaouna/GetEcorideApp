@@ -29,10 +29,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?int $id = null;
 
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -61,15 +61,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 20, nullable: true)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

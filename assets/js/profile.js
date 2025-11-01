@@ -214,6 +214,7 @@
                 const action = err?.response?.data?.action;
 
                 if (status === 422) {
+                    console.log(status);
                     if (action?.type === "modal") openVehicleModal();
                     const cta = `<button type="button" class="btn btn-sm btn-primary ms-2" id="open-add-vehicle">Ajouter un véhicule</button>`;
                     showFlash(

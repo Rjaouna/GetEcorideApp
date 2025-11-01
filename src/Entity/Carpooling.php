@@ -14,53 +14,53 @@ class Carpooling extends AbstractEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['carpooling.index'])]
     private ?User $driver = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['profile:read'])]
-
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?Vehicle $vehicle = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?string $deparatureCity = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?string $arrivalCity = null;
 
     #[ORM\Column]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?\DateTimeImmutable $deparatureAt = null;
 
     #[ORM\Column]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?\DateTimeImmutable $arrivalAt = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?int $seatsTotal = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?int $seatsAvaible = null;
 
     #[ORM\Column]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?string $status = null;
 
     #[ORM\Column]
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?bool $ecoTag = null;
 
     public function getId(): ?int
