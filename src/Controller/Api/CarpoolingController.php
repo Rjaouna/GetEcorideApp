@@ -21,6 +21,7 @@ class CarpoolingController extends AbstractController
 	#[Route('/api/carpoolings/{id}', name: 'api_carpooling_show')]
 	public function show(CarpoolingRepository $repo, int $id): Response
 	{
+
 		$carpooling = $repo->find($id);
 
 		if (!$carpooling) {

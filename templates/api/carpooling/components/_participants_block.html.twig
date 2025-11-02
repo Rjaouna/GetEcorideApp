@@ -13,10 +13,12 @@ const response = await fetch(carpoolingUrl);
 
 
     const ride = await response.json();
-    const participants = ride.participants ?? [];
-	console.log(participants);
+   
+	function reloadParticipants(){
+		 const participants = ride.participants ?? [];
+	// console.log(participants);
 
-    container.innerHTML = `
+   return  container.innerHTML = `
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-light">
           <h5 class="mb-0"><i class="bi bi-people-fill text-primary"></i> Participants</h5>
@@ -27,13 +29,118 @@ const response = await fetch(carpoolingUrl);
             : '<p class="text-muted mb-0">Aucun participant pour le moment.</p>'}
         </div>
       </div>
-<button class="btn btn-primary w-100">Participer à ce couvoiturage</button>
-
-
     `;
+
+	}
+reloadParticipants()
+
   } catch (error) {
     container.innerHTML = `<div class="alert alert-danger text-center">Erreur de chargement des participants.</div>`;
   }
 });
+
+// Gestion du clic sur le bouton "Participer à ce covoiturage"
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const id = {{ id ?? 'null' }};
+  if (!id) return;
+
+  const container = document.getElementById('participants-block');
+  const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0', `/${id}`);
+
+  // Fonction globale réutilisable
+  async function reloadParticipants() {
+    const response = await fetch(carpoolingUrl);
+    const ride = await response.json();
+    const participants = ride.participants ?? [];
+
+container.innerHTML = container.innerHTML = `
+<div class="card border-0 shadow-sm mb-4">
+	<div class="card-header bg-primary text-white d-flex align-items-center">
+		<i class="bi bi-people-fill me-2 fs-4"></i>
+		<h5 class="mb-0">Participants</h5>
+	</div>
+	<div class="card-body">
+		${
+		        participants.length > 0
+		          ? `
+		<ul class="list-group list-group-flush">
+			${participants
+			              .map(
+			                (p, i) => `
+			<li class="list-group-item d-flex align-items-center border-0 border-bottom">
+				<div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-3" style="width:40px; height:40px; font-weight:bold;">
+					${p.firstName?.charAt(0).toUpperCase() ?? '?'}
+				</div>
+				<div>
+					<span class="fw-semibold">${p.firstName} ${p.lastName}</span>
+				</div>
+			</li>`
+			              )
+			              .join('')}
+		</ul>`
+		          : `
+		<div class="text-center py-4 text-muted">
+			<i class="bi bi-person-x fs-1 d-block mb-2"></i>
+			<p class="mb-0">Aucun participant pour le moment.</p>
+		</div>`
+		      }
+	</div>
+</div>
+`;
+
+
+  }
+
+  await reloadParticipants(); // Chargement initial
+
+  const joinButton = document.getElementById('join-carpooling-btn');
+  if (!joinButton) return;
+
+  let isParticipant = false;
+
+  joinButton.addEventListener('click', async () => {
+    try {
+      joinButton.disabled = true;
+      joinButton.textContent = isParticipant ? 'Désinscription en cours...' : 'Inscription en cours...';
+
+      const endpoint = isParticipant
+        ? `/api/carpoolings/${id}/leave`
+        : `/api/carpoolings/${id}/join`;
+
+      const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await response.json();
+
+      if (response.ok) {
+        isParticipant = !isParticipant; // on inverse l’état
+
+        // 🔄 Rechargement des participants à jour
+        await reloadParticipants();
+
+        // Mise à jour visuelle du bouton
+        if (isParticipant) {
+          joinButton.classList.remove('btn-primary');
+          joinButton.classList.add('btn-success');
+          joinButton.textContent = 'Se désinscrire';
+        } else {
+          joinButton.classList.remove('btn-success');
+          joinButton.classList.add('btn-primary');
+          joinButton.textContent = 'Participer à ce covoiturage';
+        }
+      } else {
+        joinButton.classList.add('btn-warning');
+        joinButton.textContent = data.message || 'Erreur inconnue';
+      }
+
+    } catch (error) {
+      console.error(error);
+      joinButton.classList.add('btn-danger');
+      joinButton.textContent = 'Erreur réseau';
+    } finally {
+      joinButton.disabled = false;
+    }
+  });
+});
+
 </script>
 

@@ -111,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Carpooling>
      */
+    #[Groups(['profile:read'])]
     #[ORM\ManyToMany(targetEntity: Carpooling::class, mappedBy: 'participants')]
 
     private Collection $covoiturages;

@@ -42,13 +42,23 @@
 	</div>
 </div>
 
+<button id="join-carpooling-btn" class="btn {{ isParticipant ? 'btn-success' : 'btn-primary' }} w-100" data-participant="{{ isParticipant ? '1' : '0' }}">
+	{{ isParticipant ? 'Se désinscrire' : 'Participer à ce covoiturage' }}
+</button>
+
+
 
 	</div>
+
 
 	{# Inclure les composants #}
 	{% include 'api/carpooling/components/_carpooling_block.html.twig' %}
 	{% include 'api/carpooling/components/_driver_block.html.twig' %}
 	{% include 'api/carpooling/components/_vehicle_block.html.twig' %}
 	{% include 'api/carpooling/components/_participants_block.html.twig' %}
+
+ <script src="{{ asset('js/AudioPlayer.js') }}"></script>
+
+
 
 
