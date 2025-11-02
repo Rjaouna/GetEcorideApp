@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche de covoiturages
+{% endblock %}
+
+{% block body %}
+	<div class="container my-4">
+		<div class="card shadow-sm border-0">
+			<div class="card-body">
+				<h5 class="card-title mb-3">Filtrer les covoiturages</h5>
+
+				<form
+					id="carpool-filter-form" method="get" action="{{ path('carpooling_filter') }}" class="row g-3">
+
+					<!-- Ville de départ -->
+					<div class="col-md-4">
+						<label for="deparatureCity" class="form-label">Ville de départ</label>
+						<input type="text" class="form-control" id="deparatureCity" name="deparatureCity" placeholder="Ex : Lille">
+					</div>
+
+					<!-- Ville d’arrivée -->
+					<div class="col-md-4">
+						<label for="arrivalCity" class="form-label">Ville d’arrivée</label>
+						<input type="text" class="form-control" id="arrivalCity" name="arrivalCity" placeholder="Ex : Paris">
+					</div>
+
+					<!-- Date de départ -->
+					<div class="col-md-4">
+						<label for="deparatureAt" class="form-label">Date de départ</label>
+						<input type="date" class="form-control" id="deparatureAt" name="deparatureAt">
+					</div>
+
+					<!-- Places disponibles -->
+					<div class="col-md-3">
+						<label for="seatsAvaible" class="form-label">Places disponibles (min.)</label>
+						<input type="number" min="1" class="form-control" id="seatsAvaible" name="seatsAvaible" placeholder="Ex : 2" required>
+					</div>
+
+					<!-- Prix -->
+					<div class="col-md-3">
+						<label for="price" class="form-label">Prix maximum (€)</label>
+						<input type="number" min="0" step="1" class="form-control" id="price" name="price" placeholder="Ex : 50">
+					</div>
+
+					<!-- ÉcoTag -->
+					<div class="col-md-3 align-self-end">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="ecoTag" name="ecoTag" value="1">
+							<label class="form-check-label" for="ecoTag">Trajets éco-responsables</label>
+						</div>
+					</div>
+
+					<!-- Boutons -->
+					<div class="col-md-3 align-self-end d-flex justify-content-end gap-2">
+						<button type="reset" class="btn btn-outline-secondary">Réinitialiser</button>
+						<button type="submit" class="btn btn-primary">Filtrer</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="carpool-results" class="mt-4"></div>
+
+	 <script>
+		document.getElementById("carpool-filter-form").addEventListener("submit", async (e) => {
+		  e.preventDefault();
+		
+		  const params = new URLSearchParams(new FormData(e.target));
+		  console.log("🛰️ Paramètres envoyés :", [...params]);
+		  const url = "{{ path('carpooling_filter') }}?" + params.toString();
+		  console.log("🔗 URL appelée :", url);
+		
+		  const resultsDiv = document.getElementById("carpool-results");
+		  resultsDiv.innerHTML = `<div class="text-center py-4 text-muted">Chargement...</div>`;
+		
+		  try {
+		    const response = await fetch(url, { headers: { Accept: "application/json" } });
+		    const data = await response.json();
+		
+		    if (!Array.isArray(data) || !data.length) {
+		      resultsDiv.innerHTML = `<div class="alert alert-warning container">Aucun covoiturage trouvé.</div>`;
+		      return;
+		    }
+	const ROUTE_CARPOOL_DETAILS = "{{ path('app_front_carpooling', {'id': 0}) }}".replace(/0$/, "");
+	
+		    // ✅ Une seule boucle map() pour afficher les cartes
+		    resultsDiv.innerHTML = `
+	        <div class="container">
+		      <div class="row g-4">
+		        ${data.map(c => `
+		          <div class="col-12 col-sm-6 col-lg-3">
+		            <div class="card h-100 shadow-sm border-0">
+		              <div class="card-body">
+		                <h5 class="card-title text-primary">
+		                  ${c.deparatureCity} → ${c.arrivalCity}
+		                </h5>
+		                <p class="card-text mb-1">
+		                  <strong>Date de départ :</strong><br>
+		                  ${new Date(c.deparatureAt).toLocaleString('fr-FR')}
+		                </p>
+		                <p class="card-text mb-1">
+		                  <strong>Places disponibles :</strong> ${c.seatsAvaible ?? 0}
+		                </p>
+		                <p class="card-text mb-1">
+		                  <strong>Prix :</strong> ${c.price} €
+		                </p>
+		                ${c.ecoTag ? '<span class="badge bg-success">Éco</span>' : ''}
+                        <a href="${ROUTE_CARPOOL_DETAILS}${c.id}" class="btn btn-link">
+                            <i class="bi bi-eye"></i>
+                            Détails
+                        </a>
+		              </div>
+		            </div>
+		          </div>
+	
+	
+		        `).join('')}
+	</div></div>
+	
+		    `;
+		
+		  } catch (error) {
+		    console.error(error);
+		    resultsDiv.innerHTML = `<div class="alert alert-danger container">Erreur lors du chargement des résultats.</div>`;
+		  }
+		});
+		</script>
+{% endblock %}

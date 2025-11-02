@@ -2,92 +2,97 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm ">
 
 
+	<div
+		class="container-fluid">
 
-<div class="container-fluid">
+		{# Brand #}
+		<a class="navbar-brand d-flex align-items-center fw-bold bg-success ps-1 rounded" href="{{ path('app_front_home') }}">
+			<img src="{{ asset('assets/images/logo.svg') }}" alt="Logo" height="28" class="me-2">
+		</a>
 
-    {# Brand #}
-    <a class="navbar-brand d-flex align-items-center fw-bold bg-success ps-1 rounded" href="{{ path('app_front_home') }}">
-      <img src="{{ asset('assets/images/logo.svg') }}" alt="Logo" height="28" class="me-2">
-    </a>
+		{# Toggler #}
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-    {# Toggler #}
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
-            aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+		<div
+			class="collapse navbar-collapse" id="navbarColor03">
+			{# Left: Menus principaux #}
+			<ul class="navbar-nav me-auto">
+				<li class="nav-item">
+					<a class="nav-link fw-bold text-white-50 hover-text-white" href="#">Comment ça marche ?</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link fw-bold text-white" href="{{path('app_front_search_ride')}}">Trouver un trajet</a>
+				</li>
 
-    <div class="collapse navbar-collapse" id="navbarColor03">
-      {# Left: Menus principaux #}
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link fw-bold text-white-50 hover-text-white" href="#">Comment ça marche ?</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-bold text-white" href="#">Trouver un trajet</a>
-        </li>
+				{% if participations is defined and participations is not empty %}
+					<li class="nav-item">
+						<a class="nav-link fw-bold text-white-50 hover-text-white" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							Mes participations
+						</a>
+					</li>
+				{% endif %}
 
-        {% if participations is defined and participations is not empty %}
-          <li class="nav-item">
-            <a class="nav-link fw-bold text-white-50 hover-text-white" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              Mes participations
-            </a>
-          </li>
-        {% endif %}
+				<li class="nav-item">
+					<a class="nav-link fw-bold text-white-50 hover-text-white" href="#">Contact</a>
+				</li>
+			</ul>
 
-        <li class="nav-item">
-          <a class="nav-link fw-bold text-white-50 hover-text-white" href="#">Contact</a>
-        </li>
-      </ul>
+			{# Right: Compte (connexion / menu user) #}
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item dropdown ms-md-2">
+					{% if app.user %}
+						{% set pseudo    = app.user.pseudo ?? (app.user.email|split('@')[0]) %}
+						{% set initial   = (pseudo|slice(0,1)|upper) %}
+						{% set isDriver  = 'ROLE_DRIVER' in app.user.roles %}
+						{% set switchIcon= isDriver ? 'bi-person' : 'bi-car-front' %}
+						{% set switchLbl = isDriver ? 'Passer en mode Passager' : 'Passer en mode Conducteur' %}
 
-      {# Right: Compte (connexion / menu user) #}
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item dropdown ms-md-2">
-          {% if app.user %}
-            {% set pseudo    = app.user.pseudo ?? (app.user.email|split('@')[0]) %}
-            {% set initial   = (pseudo|slice(0,1)|upper) %}
-            {% set isDriver  = 'ROLE_DRIVER' in app.user.roles %}
-            {% set switchIcon= isDriver ? 'bi-person' : 'bi-car-front' %}
-            {% set switchLbl = isDriver ? 'Passer en mode Passager' : 'Passer en mode Conducteur' %}
+						<a class="nav-link dropdown-toggle d-flex align-items-center fw-bold text-white" href="#" id="navAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<span class="rounded-circle d-inline-flex align-items-center justify-content-center me-2 bg-white text-primary" style="width:28px;height:28px;">
+								<strong class="small">{{ initial }}</strong>
+							</span>
+							<span class="d-none d-lg-inline">{{ pseudo }}</span>
+						</a>
 
-            <a class="nav-link dropdown-toggle d-flex align-items-center fw-bold text-white" href="#" id="navAccount"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="rounded-circle d-inline-flex align-items-center justify-content-center me-2 bg-white text-primary"
-                    style="width:28px;height:28px;">
-                <strong class="small">{{ initial }}</strong>
-              </span>
-              <span class="d-none d-lg-inline">{{ pseudo }}</span>
-            </a>
+						<div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navAccount" style="min-width: 260px;">
+							<a class="dropdown-item fw-semibold" href="{{path('profile_view')}}">
+								<i class="bi bi-person-circle me-2"></i>
+								Mon profil</a>
 
-            <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navAccount" style="min-width: 260px;">
-<a class="dropdown-item fw-semibold" href="{{path('profile_view')}}">
-	<i class="bi bi-person-circle me-2"></i>
-	Mon profil</a>
+							<a class="dropdown-item fw-semibold" href="#">
+								<i class="bi bi-sliders2 me-2"></i>
+								Mes préférences</a>
 
-              <a class="dropdown-item fw-semibold" href="#"><i class="bi bi-sliders2 me-2"></i> Mes préférences</a>
-
-              {% if isDriver %}
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item fw-semibold" href="#"><i class="bi bi-plus-circle me-2"></i> Publier un trajet</a>
-              {% endif %}
-
-
+							{% if isDriver %}
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item fw-semibold" href="#">
+									<i class="bi bi-plus-circle me-2"></i>
+									Publier un trajet</a>
+							{% endif %}
 
 
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item fw-semibold text-danger" href="{{path('app_logout')}}"><i class="bi bi-box-arrow-right me-2"></i> Déconnexion</a>
-            </div>
-          {% else %}
-            <a class="nav-link dropdown-toggle fw-bold text-white" href="#" id="navAccount" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              Mon compte
-            </a>
-            <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navAccount">
-              <a class="dropdown-item fw-semibold" href="{{ path('app_login') }}"><i class="bi bi-box-arrow-in-right me-2"></i> Connexion</a>
-              <a class="dropdown-item fw-semibold" href="{{path('app_register')}}"><i class="bi bi-person-plus me-2"></i> Créer mon compte</a>
-            </div>
-          {% endif %}
-        </li>
-      </ul>
-    </div>
-  </div>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item fw-semibold text-danger" href="{{path('app_logout')}}">
+								<i class="bi bi-box-arrow-right me-2"></i>
+								Déconnexion</a>
+						</div>
+					{% else %}
+						<a class="nav-link dropdown-toggle fw-bold text-white" href="#" id="navAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Mon compte
+						</a>
+						<div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navAccount">
+							<a class="dropdown-item fw-semibold" href="{{ path('app_login') }}">
+								<i class="bi bi-box-arrow-in-right me-2"></i>
+								Connexion</a>
+							<a class="dropdown-item fw-semibold" href="{{path('app_register')}}">
+								<i class="bi bi-person-plus me-2"></i>
+								Créer mon compte</a>
+						</div>
+					{% endif %}
+				</li>
+			</ul>
+		</div>
+	</div>
 </nav>
