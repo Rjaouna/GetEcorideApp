@@ -1,7 +1,7 @@
-<!-- FORM OVERLAY (à placer dans l'overlay du slider) -->
+<!-- FORM OVERLAY (dans la page d'accueil) -->
 <div class="container py-3 py-md-4">
 	<div class="bg-white rounded-4 shadow-sm p-3 p-md-4">
-		<form method="get" action="#" class="g-3">
+		<form id="carpool-filter-form" class="g-3">
 			<h2 class="h4 h3-md text-secondary mb-3">
 				<i class="bi bi-geo-alt-fill text-primary"></i>
 				Rechercher un covoiturage
@@ -13,7 +13,7 @@
 				<div class="col-12 col-md-4">
 					<label for="departureCity" class="form-label small text-muted mb-1" id="labelDepart">Ville de départ</label>
 					<div class="input-group">
-						<input type="text" id="departureCity" name="depart" class="form-control" placeholder="Paris, Lille…" autocomplete="off" required value="{{ depart|default('') }}">
+						<input type="text" id="departureCity" name="deparatureCity" class="form-control" placeholder="Paris, Lille…" autocomplete="off" required>
 					</div>
 				</div>
 
@@ -28,7 +28,7 @@
 				<div class="col-12 col-md-4">
 					<label for="destinationCity" class="form-label small text-muted mb-1" id="labelArrivee">Ville d'arrivée</label>
 					<div class="input-group">
-						<input type="text" id="destinationCity" name="arrivee" class="form-control" placeholder="Marseille, Lyon…" autocomplete="off" required value="{{ arrivee|default('') }}">
+						<input type="text" id="destinationCity" name="arrivalCity" class="form-control" placeholder="Marseille, Lyon…" autocomplete="off" required>
 					</div>
 				</div>
 
@@ -36,7 +36,7 @@
 				<div class="col-12 col-md-3">
 					<label for="travelDate" class="form-label small text-muted mb-1" id="labelDate">Date de départ</label>
 					<div class="input-group">
-						<input type="date" id="travelDate" name="departAt" class="form-control" value="{{ (departAt ?? 'now')|date('Y-m-d') }}" min="{{ 'now'|date('Y-m-d') }}">
+						<input type="date" id="travelDate" name="deparatureAt" class="form-control" min="{{ 'now'|date('Y-m-d') }}">
 					</div>
 				</div>
 
@@ -55,31 +55,31 @@
 
  <script>
 (() => {
-  const dep=document.getElementById('departureCity');
-  const dest=document.getElementById('destinationCity');
-  const dateI=document.getElementById('travelDate');
-  const swap=document.getElementById('swap');
-  const lblDep=document.getElementById('labelDepart');
-  const lblArr=document.getElementById('labelArrivee');
-  const lblDat=document.getElementById('labelDate');
+	const dep = document.getElementById('departureCity');
+	const dest = document.getElementById('destinationCity');
+	const dateI = document.getElementById('travelDate');
+	const swap = document.getElementById('swap');
 
-  const LBL_DEFAULT={dep:'Ville de départ',arr:"Ville D'arrivée",dat:'Date de départ'};
-  const LBL_FOCUS={dep:"D'où partez-vous ?",arr:"Où allez-vous ?",dat:"Quand partez-vous ?"};
-  const focusLabel=(el,t)=>{ if(!el)return; el.textContent=t; el.classList.add('label-focus'); };
-  const blurLabel =(el,t)=>{ if(!el)return; el.textContent=t; el.classList.remove('label-focus'); };
+	// Permutation des villes
+	swap?.addEventListener('click', () => {
+		const tmp = dep.value;
+		dep.value = dest.value;
+		dest.value = tmp;
+		dep.focus();
+	});
 
-  dep?.addEventListener('focus',()=>focusLabel(lblDep,LBL_FOCUS.dep));
-dep?.addEventListener('blur', ()=>focusLabel (lblDep, LBL_DEFAULT.dep));
+	// Soumission du formulaire
+	const form = document.getElementById('carpool-filter-form');
+	form?.addEventListener('submit', (e) => {
+		e.preventDefault();
 
-  dest?.addEventListener('focus',()=>focusLabel(lblArr,LBL_FOCUS.arr));
-dest?.addEventListener('blur', ()=>focusLabel (lblArr, LBL_DEFAULT.arr));
+		const params = new URLSearchParams(new FormData(form)).toString();
 
-  dateI?.addEventListener('focus',()=>focusLabel(lblDat,LBL_FOCUS.dat));
-dateI?.addEventListener('blur', ()=>focusLabel (lblDat, LBL_DEFAULT.dat));
+		// 🔗 Redirection vers la page des résultats
+const targetUrl = "{{ path('app_front_search_ride') }}?" + params;
 
-
-  swap?.addEventListener('click',()=>{ const tmp=dep.value; dep.value=dest.value; dest.value=tmp; dep.focus(); });
-
-  if(dateI && !dateI.value){ const today=new Date().toISOString().split('T')[0]; dateI.min=today; }
+		window.location.href = targetUrl;
+	});
 })();
 </script>
+

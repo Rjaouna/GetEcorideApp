@@ -33,7 +33,8 @@
 					<!-- Places disponibles -->
 					<div class="col-md-3">
 						<label for="seatsAvaible" class="form-label">Places disponibles (min.)</label>
-						<input type="number" min="1" class="form-control" id="seatsAvaible" name="seatsAvaible" placeholder="Ex : 2" required>
+<input type="number" min="1" class="form-control" id="seatsAvaible" name="seatsAvaible" placeholder="Ex : 2" value="1">
+
 					</div>
 
 					<!-- Prix -->
@@ -62,68 +63,83 @@
 
 	<div id="carpool-results" class="mt-4"></div>
 
-	 <script>
-		document.getElementById("carpool-filter-form").addEventListener("submit", async (e) => {
-		  e.preventDefault();
-		
-		  const params = new URLSearchParams(new FormData(e.target));
-		  console.log("🛰️ Paramètres envoyés :", [...params]);
-		  const url = "{{ path('carpooling_filter') }}?" + params.toString();
-		  console.log("🔗 URL appelée :", url);
-		
-		  const resultsDiv = document.getElementById("carpool-results");
-		  resultsDiv.innerHTML = `<div class="text-center py-4 text-muted">Chargement...</div>`;
-		
-		  try {
-		    const response = await fetch(url, { headers: { Accept: "application/json" } });
-		    const data = await response.json();
-		
-		    if (!Array.isArray(data) || !data.length) {
-		      resultsDiv.innerHTML = `<div class="alert alert-warning container">Aucun covoiturage trouvé.</div>`;
-		      return;
-		    }
-	const ROUTE_CARPOOL_DETAILS = "{{ path('app_front_carpooling', {'id': 0}) }}".replace(/0$/, "");
-	
-		    // ✅ Une seule boucle map() pour afficher les cartes
-		    resultsDiv.innerHTML = `
-	        <div class="container">
-		      <div class="row g-4">
-		        ${data.map(c => `
-		          <div class="col-12 col-sm-6 col-lg-3">
-		            <div class="card h-100 shadow-sm border-0">
-		              <div class="card-body">
-		                <h5 class="card-title text-primary">
-		                  ${c.deparatureCity} → ${c.arrivalCity}
-		                </h5>
-		                <p class="card-text mb-1">
-		                  <strong>Date de départ :</strong><br>
-		                  ${new Date(c.deparatureAt).toLocaleString('fr-FR')}
-		                </p>
-		                <p class="card-text mb-1">
-		                  <strong>Places disponibles :</strong> ${c.seatsAvaible ?? 0}
-		                </p>
-		                <p class="card-text mb-1">
-		                  <strong>Prix :</strong> ${c.price} €
-		                </p>
-		                ${c.ecoTag ? '<span class="badge bg-success">Éco</span>' : ''}
-                        <a href="${ROUTE_CARPOOL_DETAILS}${c.id}" class="btn btn-link">
-                            <i class="bi bi-eye"></i>
-                            Détails
-                        </a>
-		              </div>
-		            </div>
-		          </div>
-	
-	
-		        `).join('')}
-	</div></div>
-	
-		    `;
-		
-		  } catch (error) {
-		    console.error(error);
-		    resultsDiv.innerHTML = `<div class="alert alert-danger container">Erreur lors du chargement des résultats.</div>`;
-		  }
-		});
-		</script>
+ <script>
+/**
+ * Initialise la recherche des covoiturages (avec ou sans soumission de formulaire)
+ */
+function initCarpoolFilter() {
+  const form = document.getElementById("carpool-filter-form");
+  const resultsDiv = document.getElementById("carpool-results");
+
+  if (!form || !resultsDiv) return; // sécurité
+
+  const ROUTE_CARPOOL_DETAILS = "{{ path('app_front_carpooling', {'id': 0}) }}".replace(/0$/, "");
+
+  // 🔹 Fonction de récupération des résultats
+  async function fetchCarpoolings(url) {
+    resultsDiv.innerHTML = `<div class="text-center py-4 text-muted">Chargement...</div>`;
+
+    try {
+      const response = await fetch(url, { headers: { Accept: "application/json" } });
+      const data = await response.json();
+
+      if (!Array.isArray(data) || !data.length) {
+        resultsDiv.innerHTML = `<div class="alert alert-warning container">Aucun covoiturage trouvé.</div>`;
+        return;
+      }
+
+      // 🔹 Affichage des cartes Bootstrap
+      resultsDiv.innerHTML = `
+        <div class="container">
+          <div class="row g-4">
+            ${data
+              .map(
+                (c) => `
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="card-body">
+                    <h5 class="card-title text-primary">${c.deparatureCity} → ${c.arrivalCity}</h5>
+                    <p class="card-text mb-1"><strong>Date de départ :</strong><br>${new Date(
+                      c.deparatureAt
+                    ).toLocaleString("fr-FR")}</p>
+                    <p class="card-text mb-1"><strong>Places disponibles :</strong> ${c.seatsAvaible ?? 0}</p>
+                    <p class="card-text mb-1"><strong>Prix :</strong> ${c.price} €</p>
+                    ${c.ecoTag ? '<span class="badge bg-success">Éco</span>' : ""}
+                    <a href="${ROUTE_CARPOOL_DETAILS}${c.id}" class="btn btn-link">
+                      <i class="bi bi-eye"></i> Détails
+                    </a>
+                  </div>
+                </div>
+              </div>`
+              )
+              .join("")}
+          </div>
+        </div>`;
+    } catch (error) {
+      console.error(error);
+      resultsDiv.innerHTML = `<div class="alert alert-danger container">Erreur lors du chargement des résultats.</div>`;
+    }
+  }
+
+  // 🔹 Écoute la soumission du formulaire
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams(new FormData(form));
+    const url = "{{ path('carpooling_filter') }}?" + params.toString();
+    fetchCarpoolings(url);
+  });
+
+  // 🔹 Si l’URL contient déjà des paramètres (redirection depuis la page d’accueil)
+  const currentUrl = new URL(window.location.href);
+  if (currentUrl.search) {
+    const url = "{{ path('carpooling_filter') }}" + currentUrl.search;
+    fetchCarpoolings(url);
+  }
+}
+
+// Appel automatique dès que la page est chargée
+document.addEventListener("DOMContentLoaded", initCarpoolFilter);
+</script>
+
+
 {% endblock %}

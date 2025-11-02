@@ -71,4 +71,58 @@ class CarpoolingRepository extends ServiceEntityRepository
 
         return $qb->orderBy('c.deparatureAt', 'ASC')->getQuery()->getResult();
     }
+
+
+    /**
+     * Filtre les covoiturages selon plusieurs critères optionnels
+     */
+    public function filterCarpoolings(
+        ?string $deparatureCity,
+        ?string $arrivalCity,
+        ?string $deparatureAt,
+        ?int $seatsAvaible,
+        ?float $price,
+        ?bool $ecoTag
+    ): array {
+        $qb = $this->createQueryBuilder('c');
+
+        if ($deparatureCity) {
+            $qb->andWhere('LOWER(c.deparatureCity) LIKE LOWER(:deparatureCity)')
+                ->setParameter('deparatureCity', "%$deparatureCity%");
+        }
+
+        if ($arrivalCity) {
+            $qb->andWhere('LOWER(c.arrivalCity) LIKE LOWER(:arrivalCity)')
+                ->setParameter('arrivalCity', "%$arrivalCity%");
+        }
+
+        if ($deparatureAt) {
+            // On compare les dates de départ (même jour)
+            $date = new \DateTimeImmutable($deparatureAt);
+            $nextDay = $date->modify('+1 day');
+            $qb->andWhere('c.deparatureAt >= :start AND c.deparatureAt < :end')
+                ->setParameter('start', $date)
+                ->setParameter('end', $nextDay);
+        }
+
+        if ($seatsAvaible) {
+            $qb->andWhere('c.seatsAvaible >= :seatsAvaible')
+                ->setParameter('seatsAvaible', $seatsAvaible);
+        }
+
+        if ($price) {
+            $qb->andWhere('c.price <= :price')
+                ->setParameter('price', $price);
+        }
+
+        if ($ecoTag) {
+            $qb->andWhere('c.ecoTag = :ecoTag')
+                ->setParameter('ecoTag', true);
+        }
+
+        return $qb
+            ->orderBy('c.deparatureAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
