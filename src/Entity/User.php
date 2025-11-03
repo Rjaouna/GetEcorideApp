@@ -106,6 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['profile:read', 'carpooling.index'])]
     private ?DriverPreferences $driverPreferences = null;
 
     /**

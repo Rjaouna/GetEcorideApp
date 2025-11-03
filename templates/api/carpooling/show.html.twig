@@ -40,11 +40,27 @@
 			<div id="participants-block"></div>
 		</div>
 	</div>
+<div class="row">
+	<div class="col-md-6 mb-4">
+		<div id="preferences_driver"></div>
+	</div>
 </div>
 
-<button id="join-carpooling-btn" class="btn {{ isParticipant ? 'btn-success' : 'btn-primary' }} w-100" data-participant="{{ isParticipant ? '1' : '0' }}">
-	{{ isParticipant ? 'Se désinscrire' : 'Participer à ce covoiturage' }}
+
+</div>
+
+<button id="join-carpooling-btn" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" data-participant="{{ isParticipant ? '1' : '0' }}">
+
+	{% if isParticipant %}
+		<span>Se désinscrire du covoiturage</span>
+	{% else %}
+		<span>Participer à ce covoiturage</span>
+	{% endif %}
 </button>
+
+
+
+
 
 
 
@@ -55,7 +71,11 @@
 	{% include 'api/carpooling/components/_carpooling_block.html.twig' %}
 	{% include 'api/carpooling/components/_driver_block.html.twig' %}
 	{% include 'api/carpooling/components/_vehicle_block.html.twig' %}
-	{% include 'api/carpooling/components/_participants_block.html.twig' %}
+{% include 'api/carpooling/components/_participants_block.html.twig' %}
+
+
+
+
 
  <script src="{{ asset('js/AudioPlayer.js') }}"></script>
 

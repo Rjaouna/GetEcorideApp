@@ -22,11 +22,11 @@ class DriverPreferences extends AbstractEntity
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['preference:read'])]
+    #[Groups(['preference:read', 'carpooling.index'])]
     private ?bool $smokingAllowed = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['preference:read'])]
+    #[Groups(['preference:read', 'carpooling.index'])]
     private ?bool $petsAllowed = null;
 
     public function getId(): ?int

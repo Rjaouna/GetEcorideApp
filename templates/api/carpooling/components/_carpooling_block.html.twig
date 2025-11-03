@@ -1,47 +1,65 @@
  <script>
 document.addEventListener('DOMContentLoaded', async () => {
-  const id = {{ id ?? 'null' }}; // tu peux passer l'ID depuis ton contrôleur show()
+  const id = {{ id ?? 'null' }};
   if (!id) return;
 
   const container = document.getElementById('carpooling-block');
-  container.innerHTML = `<div class="text-center text-muted">Chargement du trajet...</div>`;
-const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0', `/${id}`);
+  container.innerHTML = `<div class="text-center text-muted py-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div>Chargement du trajet...</div>
+  </div>`;
+
+  const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0', `/${id}`);
 
   try {
-const response = await fetch(carpoolingUrl);
-
-
-
-const ride = await response.json();
-
+    const response = await fetch(carpoolingUrl);
+if (!response.ok) throw new Error('Erreur HTTP : ' + response.status);
+    const ride = await response.json();
 
     container.innerHTML = `
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h5 class="mb-0">
-            <i class="bi bi-geo-alt-fill text-primary"></i> Informations du trajet
+            <i class="bi bi-geo-alt-fill me-2"></i>
+            ${ride.deparatureCity} → ${ride.arrivalCity}
           </h5>
-          <div>
-            ${ride.ecoTag ? '<span class="badge bg-success"><i class="bi bi-leaf"></i> Éco</span>' : ''}
+          ${ride.ecoTag ? '<span class="badge bg-light px-3 py-2 rounded"><i class="bi bi-leaf me-1 text-primary"></i>Éco-responsable</span>' : ''}
+        </div>
+
+        <div class="card-body bg-light">
+          <div class="row g-4 align-items-center">
+            <div class="col-md-6 border-end">
+              <p class="mb-2 fs-5"><i class="bi bi-calendar-event text-primary me-2"></i><strong>Date :</strong> ${new Date(ride.deparatureAt).toLocaleString('fr-FR')}</p>
+              <p class="mb-2 fs-5"><i class="bi bi-people-fill text-primary me-2"></i><strong>Places disponibles :</strong> ${ride.seatsAvaible ?? ride.seatsTotal}</p>
+            </div>
+
+            <div class="col-md-6 text-md-end">
+              <h3 class="text-primary fw-bold mb-2">${ride.price} €</h3>
+              <p class="text-muted mb-0"><i class="bi bi-car-front-fill me-2"></i>Véhicule : ${ride.vehicle?.brand ?? '—'} ${ride.vehicle?.model ?? ''}</p>
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <p><strong>Départ :</strong> ${ride.deparatureCity}</p>
-              <p><strong>Arrivée :</strong> ${ride.arrivalCity}</p>
-              <p><strong>Date de départ :</strong> ${new Date(ride.deparatureAt).toLocaleString('fr-FR')}</p>
-            </div>
-            <div class="col-md-6">
-              <p><strong>Prix :</strong> ${ride.price} €</p>
-              <p><strong>Places disponibles :</strong> ${ride.seatsAvaible ?? ride.seatsTotal}</p>
-            </div>
+
+        <div class="card-footer bg-white border-top d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle bg-light p-3 rounded-circle fs-4">🐾</div>
+            <div><strong>Animaux :</strong> ${ride.driver?.driverPreferences?.petsAllowed ? 'Acceptés' : 'Non acceptés'}</div>
+          </div>
+
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle bg-light p-3 rounded-circle fs-4">🚬</div>
+            <div><strong>Fumeurs :</strong> ${ride.driver?.driverPreferences?.smokingAllowed ? 'Acceptés' : 'Non acceptés'}</div>
           </div>
         </div>
       </div>
     `;
   } catch (error) {
-    container.innerHTML = `<div class="alert alert-danger text-center">Erreur de chargement du trajet.</div>`;
+    console.error(error);
+    container.innerHTML = `<div class="alert alert-danger text-center mt-4">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      Erreur de chargement du trajet.
+    </div>`;
   }
 });
 </script>
