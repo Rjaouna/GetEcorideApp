@@ -36,7 +36,7 @@ class ContactType extends AbstractType
 				'label' => 'Message',
 				'constraints' => [
 					new Assert\NotBlank(message: 'Message requis'),
-					new Assert\Length(min: 10, max: 2000),
+				new Assert\Length(min: 1, max: 2000),
 				],
 				'attr' => ['rows' => 6, 'placeholder' => 'Votre message…', 'class' => 'form-control'],
 			]);
