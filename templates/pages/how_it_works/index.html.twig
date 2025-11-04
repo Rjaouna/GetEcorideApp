@@ -1,0 +1,208 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}How it works
+{% endblock %}
+
+{% block body %}
+
+	<section id="heroDriver" class="py-5 bg-light">
+		<div class="container-fluid">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10 col-lg-8">
+
+					<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+						<div class="flex-grow-1">
+							<h2 class="h3 text-primary mb-3">Vous partez en voiture ?</h2>
+							<p class="lead mb-0">
+								Proposez votre trajet : rendez service et rentabilisez votre déplacement.
+							</p>
+						</div>
+
+						<div class="w-100 w-md-auto text-start text-md-end">
+							<button class="btn btn-primary text-white w-100 w-md-auto mt-2 mt-md-0" id="btnSwitchToPassenger">
+								Je suis passager !
+							</button>
+						</div>
+					</div>
+
+					<hr class="hr-blurry">
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section id="heroPassenger" class="py-5 bg-light d-none">
+		<div class="container-fluid">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10 col-lg-8">
+
+					<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+						<div class="flex-grow-1">
+							<h2 class="h3 text-primary mb-3">Vous cherchez un trajet ?</h2>
+							<p class="lead mb-0">
+								Trouvez un conducteur et voyagez à petit prix, facilement et en toute sécurité.
+							</p>
+						</div>
+
+						<div class="w-100 w-md-auto text-start text-md-end">
+							<button class="btn btn-primary text-white w-100 w-md-auto mt-2 mt-md-0" id="btnSwitchToDriver">
+								Je suis conducteur !
+							</button>
+						</div>
+					</div>
+
+					<hr class="hr-blurry">
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<div id="stepsPassenger" class="my-5 container d-none">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Publiez votre trajet" class="mb-3" src="{{ asset('assets/img/passager-step-1.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Trouvez votre trajet</h6>
+							<p class="small mb-0">Indiquez votre point de départ et votre destination.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Trouvez des passagers" class="mb-3" src="{{ asset('assets/img/passager-step-2.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Réservez et payez en ligne</h6>
+							<p class="small mb-0">Des passagers réservent leur place en un clic.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Voyagez ensemble" class="mb-3" src="{{ asset('assets/img/passager-step-3.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Voyagez ensemble</h6>
+							<p class="small mb-0">Partagez les frais et profitez du trajet.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Évaluez votre expérience" class="mb-3" src="{{ asset('assets/img/passager-step-4.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Évaluez votre expérience</h6>
+							<p class="small mb-0">Laissez un avis après chaque trajet.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="stepsDriver" class="my-5 container">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Publiez votre trajet" class="mb-3" src="{{ asset('assets/img/conducteur-step-1.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Publiez votre trajet</h6>
+							<p class="small mb-0">
+								Précisez destination, départ et horaires. Choisissez un trajet qui vous convient.
+																              Vous pouvez proposer un point de départ/arrivée précis avec un tarif souhaité.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Trouvez des passagers" class="mb-3" src="{{ asset('assets/img/conducteur-step-2.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Trouvez des passagers</h6>
+							<p class="small mb-0">
+								Les réservations se font en ligne (mobile money). Vous êtes averti par mail et SMS.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Voyagez ensemble" class="mb-3" src="{{ asset('assets/img/conducteur-step-3.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Voyagez ensemble</h6>
+							<p class="small mb-0">
+								Partagez votre trajet en toute sécurité : convivial, économique et écologique.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="text-start border-0 p-3 shadow-sm card">
+					<div class="d-flex flex-column align-items-center h-100">
+						<img alt="Évaluez votre expérience" class="mb-3" src="{{ asset('assets/img/conducteur-step-4.svg') }}" style="height: 150px; object-fit: cover;">
+						<div class="mt-auto w-100">
+							<h6 class="fw-bold text-uppercase">Recevez votre paiement</h6>
+							<p class="small mb-0">
+								À la fin du trajet, nous déclenchons automatiquement le virement de vos gains
+																          vers votre compte bancaire
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# ===== JS: Toggle entre PASSAGER et CONDUCTEUR ===== #}
+	 <script>
+		  (function () {
+		    const heroDriver = document.getElementById('heroDriver');
+		    const heroPassenger = document.getElementById('heroPassenger');
+		    const stepsDriver = document.getElementById('stepsDriver');
+		    const stepsPassenger = document.getElementById('stepsPassenger');
+		
+		    const btnToPassenger = document.getElementById('btnSwitchToPassenger');
+		    const btnToDriver = document.getElementById('btnSwitchToDriver');
+		
+		    function showDriver() {
+		      heroDriver.classList.remove('d-none');
+		      stepsDriver.classList.remove('d-none');
+		
+		      heroPassenger.classList.add('d-none');
+		      stepsPassenger.classList.add('d-none');
+		    }
+		
+		    function showPassenger() {
+		      heroPassenger.classList.remove('d-none');
+		      stepsPassenger.classList.remove('d-none');
+		
+		      heroDriver.classList.add('d-none');
+		      stepsDriver.classList.add('d-none');
+		    }
+		
+		    if (btnToPassenger) btnToPassenger.addEventListener('click', showPassenger);
+		    if (btnToDriver) btnToDriver.addEventListener('click', showDriver);
+		  })();
+		</script>
+
+{% endblock %}
