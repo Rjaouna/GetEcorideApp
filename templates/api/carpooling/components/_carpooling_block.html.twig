@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div>Chargement du trajet...</div>
   </div>`;
 
-const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0', `/`);
+const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0', `/${id}`);
+
+
 
 
 
@@ -17,6 +19,9 @@ const carpoolingUrl = "{{ path('api_carpooling_show', { id: 0 }) }}".replace('/0
     const response = await fetch(carpoolingUrl);
 if (!response.ok) throw new Error('Erreur HTTP : ' + response.status);
     const ride = await response.json();
+console.log(ride);
+
+
 
     container.innerHTML = `
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -37,7 +42,9 @@ if (!response.ok) throw new Error('Erreur HTTP : ' + response.status);
             </div>
 
             <div class="col-md-6 text-md-end">
-<h3 class="text-primary fw-bold mb-2">${ride.price ? ride.price : 'Non rensigné'} €</h3>
+<h3 class="text-primary fw-bold mb-2">${ride.price} €</h3>
+
+
 
 
               <p class="text-muted mb-0"><i class="bi bi-car-front-fill me-2"></i>Véhicule : ${ride.vehicle?.brand ?? '—'} ${ride.vehicle?.model ?? ''}</p>

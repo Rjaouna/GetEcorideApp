@@ -17,31 +17,19 @@
 			{# Left: Menus principaux #}
 			<ul class="navbar-nav me-auto">
 				<li class="nav-item">
-<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'app_how_it_works' %}text-decoration-underline{% endif %}" href="{{ path('app_how_it_works') }}">
-
+					<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'app_how_it_works' %}text-decoration-underline{% endif %}" href="{{ path('app_how_it_works') }}">
 						Comment ça marche ?
 					</a>
 				</li>
 
 				<li class="nav-item">
-<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'app_front_search_ride' %}text-decoration-underline{% endif %}" href="{{ path('app_front_search_ride') }}">
-
+					<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'app_front_search_ride' %}text-decoration-underline{% endif %}" href="{{ path('app_front_search_ride') }}">
 						Trouver un trajet
 					</a>
 				</li>
 
-				{% if participations is defined and participations is not empty %}
-					<li class="nav-item">
-<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'app_participations' %}text-decoration-underline{% endif %}" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-
-							Mes participations
-						</a>
-					</li>
-				{% endif %}
-
 				<li class="nav-item">
-<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'app_contact' %}text-decoration-underline{% endif %}" href="#">
-
+					<a class="nav-link fw-bold text-white {% if app.request.attributes.get('_route') == 'contact_index' %}text-decoration-underline{% endif %}" href="{{ path('contact_index') }}">
 						Contact
 					</a>
 				</li>
@@ -65,8 +53,7 @@
 						</a>
 
 						<div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navAccount" style="min-width: 260px;">
-<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'profile_view' %}text-decoration-underline{% endif %}" href="{{ path('profile_view') }}">
-
+							<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'profile_view' %}text-decoration-underline{% endif %}" href="{{ path('profile_view') }}">
 								<i class="bi bi-person-circle me-2"></i>
 								Mon profil
 							</a>
@@ -76,11 +63,17 @@
 								Mes préférences
 							</a>
 
+							<div class="dropdown-divider"></div>
+
 							{% if isDriver %}
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item fw-semibold" href="#">
+								<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'app_add_ride' %}text-decoration-underline{% endif %}" href="#">
 									<i class="bi bi-plus-circle me-2"></i>
-									Publier un trajet
+									Ajouter un trajet
+								</a>
+							{% else %}
+								<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'app_participations' %}text-decoration-underline{% endif %}" href="#">
+									<i class="bi bi-list-check me-2"></i>
+									Voir mes participations
 								</a>
 							{% endif %}
 
@@ -91,18 +84,15 @@
 							</a>
 						</div>
 					{% else %}
-<a class="nav-link dropdown-toggle fw-bold text-white {% if app.request.attributes.get('_route') in ['app_login','app_register'] %}text-decoration-underline{% endif %}" href="#" id="navAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-
+						<a class="nav-link dropdown-toggle fw-bold text-white {% if app.request.attributes.get('_route') in ['app_login','app_register'] %}text-decoration-underline{% endif %}" href="#" id="navAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							Mon compte
 						</a>
 						<div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navAccount">
-<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'app_login' %}text-decoration-underline{% endif %}" href="{{ path('app_login') }}">
-
+							<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'app_login' %}text-decoration-underline{% endif %}" href="{{ path('app_login') }}">
 								<i class="bi bi-box-arrow-in-right me-2"></i>
 								Connexion
 							</a>
-<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'app_register' %}text-decoration-underline{% endif %}" href="{{ path('app_register') }}">
-
+							<a class="dropdown-item fw-semibold {% if app.request.attributes.get('_route') == 'app_register' %}text-decoration-underline{% endif %}" href="{{ path('app_register') }}">
 								<i class="bi bi-person-plus me-2"></i>
 								Créer mon compte
 							</a>

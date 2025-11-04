@@ -1,82 +1,102 @@
-<footer class="bg-primary text-light mt-5 border-3 border-success pt-5">
-
-
-
-
-
-
-
-	<div class="container py-5">
+<footer class="bg-primary text-light mt-5 border-top border-3 border-success pt-5">
+	<div class="container pb-4">
 		<div
 			class="row g-4">
-			<!-- Bloc 1 : EcoRide -->
+
+			<!-- Bloc 1 : Présentation -->
 			<div class="col-12 col-md-4">
-<p class="mb-2"></p>
-
-
-
-
-
-					Covoiturage écologique : réduisez vos coûts et votre empreinte carbone.
+				<h5 class="fw-bold text-uppercase mb-3">EcoRide</h5>
+				<p class="small mb-3">
+					EcoRide, votre solution de covoiturage écologique. Réduisez vos coûts, 
+					          partagez vos trajets et contribuez à un avenir plus vert.
 				</p>
-
+				<p class="small text-white-50 mb-0">
+					<i class="bi bi-geo-alt-fill me-1"></i>
+					Lille, France
+				</p>
 			</div>
 
 			<!-- Bloc 2 : Liens rapides -->
-<div class="col-12 col-md-4 ">
-
-
-				<h5 class="text-uppercase mb-3">Liens rapides</h5>
-<ul class="nav flex-column small text-light">
-
-
+			<div class="col-12 col-md-4">
+				<h5 class="fw-bold text-uppercase mb-3">Liens rapides</h5>
+				<ul class="nav flex-column small">
 					<li class="nav-item">
-<a class="nav-link px-0 link-light" href="#">Accueil</a>
-
-
+						<a class="nav-link px-0 link-light {% if app.request.attributes.get('_route') == 'app_front_home' %}text-decoration-underline{% endif %}" href="{{ path('app_front_home') }}">
+							<i class="bi bi-house-door me-1"></i>
+							Accueil
+						</a>
 					</li>
 					<li class="nav-item">
-<a class="nav-link px-0 link-light" href="#">Trajets</a>
-
-
+						<a class="nav-link px-0 link-light {% if app.request.attributes.get('_route') == 'app_front_search_ride' %}text-decoration-underline{% endif %}" href="{{ path('app_front_search_ride') }}">
+							<i class="bi bi-search me-1"></i>
+							Trouver un trajet
+						</a>
 					</li>
 					<li class="nav-item">
-<a class="nav-link px-0 link-light" href="#">Contact</a>
-
-
+						<a class="nav-link px-0 link-light {% if app.request.attributes.get('_route') == 'app_how_it_works' %}text-decoration-underline{% endif %}" href="{{ path('app_how_it_works') }}">
+							<i class="bi bi-info-circle me-1"></i>
+							Comment ça marche ?
+						</a>
 					</li>
 					<li class="nav-item">
-<a href="#" class="link-light text-decoration-none me-3">Mentions légales</a>
+						<a class="nav-link px-0 link-light {% if app.request.attributes.get('_route') == 'contact_index' %}text-decoration-underline{% endif %}" href="{{ path('contact_index') }}">
+							<i class="bi bi-envelope me-1"></i>
+							Contact
+						</a>
+					</li>
+					<li class="nav-item">
+<a class="nav-link px-0 link-light {% if app.request.attributes.get('_route') == 'app_mentions_legales' %}text-decoration-underline{% endif %}" href="{{ path('app_mentions_legales') }}">
 
 
+
+							<i class="bi bi-file-earmark-text me-1"></i>
+							Mentions légales
+						</a>
 					</li>
 				</ul>
 			</div>
 
-			<!-- Bloc 3 : Suivez-nous -->
+			<!-- Bloc 3 : Contact et réseaux -->
 			<div class="col-12 col-md-4">
-				<h5 class="text-uppercase mb-3">Contactez-nous</h5>
-				<div class="d-flex gap-2">
+				<h5 class="fw-bold text-uppercase mb-3">Nous contacter</h5>
+				<p class="small mb-2">
+					<i class="bi bi-envelope-at me-1"></i>
+					<a href="mailto:contact@ecoride.com" class="link-light text-decoration-none">contact@ecoride.com</a>
+				</p>
+				<p class="small mb-3">
+					<i class="bi bi-telephone me-1"></i>
+					<a href="tel:+330100200300" class="link-light text-decoration-none">+33 1 00 20 03 00</a>
+				</p>
 
-					<p class="small mb-0">
-<a href="mailto:contact@ecoride.app" class="link-light text-decoration-none">contact@ecoride.com</a>
-
-
-					</p>
+				<h6 class="fw-bold text-uppercase mt-4 mb-3">Suivez-nous</h6>
+				<div class="d-flex gap-3">
+					<a href="#" class="link-light">
+						<i class="bi bi-facebook fs-4"></i>
+					</a>
+					<a href="#" class="link-light">
+						<i class="bi bi-twitter-x fs-4"></i>
+					</a>
+					<a href="#" class="link-light">
+						<i class="bi bi-instagram fs-4"></i>
+					</a>
 				</div>
-
-				<h5 class="my-3">Suivez-nous</h5>
-				<i class="bi bi-facebook fs-3"></i>
 			</div>
+
 		</div>
 
-		<hr class="border-secondary opacity-25 my-4">
+		<hr class="border-light opacity-25 my-4">
 
-		<div class="d-flex flex-column flex-md-row justify-content-between align-items-center small">
+		<div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-white-50">
 			<div>©
 				{{ "now"|date("Y") }}
-				EcoRide — Tous droits réservés.</div>
-
+				<strong>EcoRide</strong>
+				— Tous droits réservés.</div>
+			<div class="mt-2 mt-md-0">
+				<span>Created br
+					<strong>Ridouane Jaouna</strong>
+					⚡</span>
+			</div>
 		</div>
 	</div>
 </footer>
+
