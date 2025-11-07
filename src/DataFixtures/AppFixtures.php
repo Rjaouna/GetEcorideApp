@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Vehicle;
 use App\Entity\Carpooling;
 use App\Entity\DriverPreferences;
+use App\Entity\DriverReview;
 use App\Entity\Wallet;
 use App\Entity\WalletTransaction;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -28,6 +29,7 @@ class AppFixtures extends Fixture
 
         $users = [];
         $vehicles = [];
+        $carpoolings = [];
 
         // ---------------------------
         // 👤 1. Création de 20 Users
@@ -95,6 +97,7 @@ class AppFixtures extends Fixture
         // 🤝 3. Création de 20 Carpoolings
         // ---------------------------
         $cities = ['Lille', 'Paris', 'Lyon', 'Marseille', 'Toulouse', 'Bordeaux', 'Nice', 'Nantes', 'Dijon', 'Rouen'];
+
         for ($i = 1; $i <= 20; $i++) {
             $carpooling = new Carpooling();
             $carpooling->setDriver($faker->randomElement($users));
@@ -127,6 +130,24 @@ class AppFixtures extends Fixture
             }
 
             $manager->persist($carpooling);
+            $carpoolings[] = $carpooling;
+        }
+
+        // ---------------------------
+        // ⭐ 4. Création de 30 DriverReviews
+        // ---------------------------
+        foreach ($carpoolings as $trip) {
+            $reviewCount = $faker->numberBetween(1, 3);
+
+            for ($r = 0; $r < $reviewCount; $r++) {
+                $review = new DriverReview();
+                $review->setTrip($trip);
+                $review->setRater($faker->randomElement($users));
+                $review->setRating($faker->randomElement(['5', '4', '3', '2', '1']));
+                $review->setComment($faker->optional()->sentence($faker->numberBetween(10, 20)));
+
+                $manager->persist($review);
+            }
         }
 
         $manager->flush();

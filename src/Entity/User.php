@@ -120,6 +120,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
     private ?Wallet $wallet = null;
 
+    /**
+     * @var Collection<int, DriverReview>
+     */
+    #[ORM\OneToMany(targetEntity: DriverReview::class, mappedBy: 'rater')]
+    private Collection $driverReviews;
+
 
 
     public function __construct()
@@ -127,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->vehicles = new ArrayCollection();
         $this->carpoolings = new ArrayCollection();
         $this->covoiturages = new ArrayCollection();
+        $this->driverReviews = new ArrayCollection();
     }
     // -----------------------------------
 
@@ -453,6 +460,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->wallet = $wallet;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DriverReview>
+     */
+    public function getDriverReviews(): Collection
+    {
+        return $this->driverReviews;
+    }
+
+    public function addDriverReview(DriverReview $driverReview): static
+    {
+        if (!$this->driverReviews->contains($driverReview)) {
+            $this->driverReviews->add($driverReview);
+            $driverReview->setRater($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDriverReview(DriverReview $driverReview): static
+    {
+        if ($this->driverReviews->removeElement($driverReview)) {
+            // set the owning side to null (unless already changed)
+            if ($driverReview->getRater() === $this) {
+                $driverReview->setRater(null);
+            }
+        }
 
         return $this;
     }
