@@ -35,15 +35,29 @@
 				</li>
 			</ul>
 
-			{# Right: Compte (connexion / menu user) #}
-			<ul class="navbar-nav ms-auto">
-				<li class="nav-item dropdown ms-md-2">
+			{# Right section: Wallet + Compte #}
+			<ul
+				class="navbar-nav ms-auto align-items-center">
+
+				{# 💰 Bloc Wallet séparé #}
+				{% if app.user %}
+					<li class="nav-item me-3">
+						<div class="d-flex align-items-center bg-success text-white rounded-pill px-3 py-1 border border-success shadow-sm" style="font-size: 0.9rem; border-color:#01D758 !important;">
+							<i class="bi bi-wallet2 me-2 text-primary"></i>
+							<div class="text-start lh-1">
+								<strong id="wallet-balance" class="text-secondary">125.50 €</strong><br>
+								<small id="wallet-transactions" class="text-secondary">(0 transaction)</small>
+							</div>
+						</div>
+					</li>
+				{% endif %}
+
+				{# 👤 Dropdown utilisateur #}
+				<li class="nav-item dropdown">
 					{% if app.user %}
 						{% set pseudo = app.user.pseudo ?? (app.user.email|split('@')[0]) %}
 						{% set initial = (pseudo|slice(0,1)|upper) %}
 						{% set isDriver = 'ROLE_DRIVER' in app.user.roles %}
-						{% set switchIcon = isDriver ? 'bi-person' : 'bi-car-front' %}
-						{% set switchLbl = isDriver ? 'Passer en mode Passager' : 'Passer en mode Conducteur' %}
 
 						<a class="nav-link dropdown-toggle d-flex align-items-center fw-bold text-white" href="#" id="navAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<span class="rounded-circle d-inline-flex align-items-center justify-content-center me-2 bg-white text-primary" style="width:28px;height:28px;">
@@ -78,11 +92,13 @@
 							{% endif %}
 
 							<div class="dropdown-divider"></div>
+
 							<a class="dropdown-item fw-semibold text-danger" href="{{ path('app_logout') }}">
 								<i class="bi bi-box-arrow-right me-2"></i>
 								Déconnexion
 							</a>
 						</div>
+
 					{% else %}
 						<a class="nav-link dropdown-toggle fw-bold text-white {% if app.request.attributes.get('_route') in ['app_login','app_register'] %}text-decoration-underline{% endif %}" href="#" id="navAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							Mon compte
@@ -103,4 +119,38 @@
 		</div>
 	</div>
 </nav>
+
+ <script>
+	const walletBalance = document.getElementById('wallet-balance');
+	const walletTransactions = document.getElementById('wallet-transactions');
+
+	async function getWallet() {
+		const url = "{{ path('app_api_get_wallet') }}";
+
+		try {
+			const response = await fetch(url);
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			console.log(result);
+
+			// 🪙 Affiche le solde total formaté à 2 décimales
+			walletBalance.textContent = `${result.balance.toFixed(2)} €`;
+
+			// 💳 Si une transaction existe, affiche la dernière
+			if (result.transactions.length > 0) {
+				const lastTransaction = result.transactions[result.transactions.length - 1];
+				walletTransactions.textContent = `${lastTransaction.amount} € (${lastTransaction.type})`;
+			} else {
+				walletTransactions.textContent = "(0 transaction)";
+			}
+		} catch (error) {
+			console.error(error.message);
+		}
+	}
+
+	getWallet();
+</script>
 

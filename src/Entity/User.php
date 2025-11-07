@@ -117,6 +117,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private Collection $covoiturages;
 
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?Wallet $wallet = null;
+
 
 
     public function __construct()
@@ -428,6 +431,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->covoiturages->removeElement($covoiturage)) {
             $covoiturage->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    public function getWallet(): ?Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(?Wallet $wallet): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($wallet === null && $this->wallet !== null) {
+            $this->wallet->setOwner(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($wallet !== null && $wallet->getOwner() !== $this) {
+            $wallet->setOwner($this);
+        }
+
+        $this->wallet = $wallet;
 
         return $this;
     }
