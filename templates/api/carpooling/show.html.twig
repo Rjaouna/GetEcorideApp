@@ -1,10 +1,25 @@
-	<div class="container my-5">
-		<h2 class="text-center mb-5 fw-bold">
-			<i class="bi bi-car-front-fill text-primary"></i>
+<div class="container my-5">
+
+	<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+		<h2 class="fw-bold mb-3 mb-md-0 d-flex align-items-center gap-2">
+			<i class="bi bi-car-front-fill text-primary fs-3"></i>
 			Détails du trajet
 		</h2>
 
-<div class="container">
+		<button id="join-carpooling-btn" class="btn btn-outline-primary d-flex align-items-center gap-2 rounded-pill px-3 py-2 shadow-sm" data-participant="{{ isParticipant ? '1' : '0' }}">
+			<i id="walletIcone" class="bi {% if isParticipant %}bi-x-circle{% else %}bi-person-plus{% endif %}"></i>
+			<i id="majIcone" class="bi bi-arrow-repeat d-none"></i>
+			<span class="fw-semibold">
+				{% if isParticipant %}
+					Se désinscrire
+				{% else %}
+					Participer
+				{% endif %}
+			</span>
+		</button>
+	</div>
+
+	{# Contenu principal #}
 	<div class="row">
 		<div class="col-md-6 mb-4">
 			<div id="carpooling-block"></div>
@@ -21,60 +36,81 @@
 			<div id="participants-block"></div>
 		</div>
 	</div>
-</div>
-
-<div class="container">
 	<div class="row">
 		<div class="col-md-6 mb-4">
-			<div id="carpooling-block"></div>
+			<div id="preferences_driver"></div>
 		</div>
-		<div class="col-md-6 mb-4">
-			<div id="driver-block"></div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6 mb-4">
-			<div id="vehicle-block"></div>
-		</div>
-		<div class="col-md-6 mb-4">
-			<div id="participants-block"></div>
-		</div>
-	</div>
-<div class="row">
-	<div class="col-md-6 mb-4">
-		<div id="preferences_driver"></div>
 	</div>
 </div>
 
-
-</div>
-
-<button id="join-carpooling-btn" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" data-participant="{{ isParticipant ? '1' : '0' }}">
-
-	{% if isParticipant %}
-		<span>Se désinscrire du covoiturage</span>
-	{% else %}
-		<span>Participer à ce covoiturage</span>
-	{% endif %}
-</button>
-
-
-
-
-
-
-
-	</div>
-
-
-	{# Inclure les composants #}
-	{% include 'api/carpooling/components/_carpooling_block.html.twig' %}
-	{% include 'api/carpooling/components/_driver_block.html.twig' %}
-	{% include 'api/carpooling/components/_vehicle_block.html.twig' %}
+{% include 'api/carpooling/components/_carpooling_block.html.twig' %}
+{% include 'api/carpooling/components/_driver_block.html.twig' %}
+{% include 'api/carpooling/components/_vehicle_block.html.twig' %}
 {% include 'api/carpooling/components/_participants_block.html.twig' %}
 
+ <script>
+const jointCarpoolingBtn = document.getElementById('join-carpooling-btn');
+const walletIcone = document.getElementById('walletIcone');
+const majIcone = document.getElementById('majIcone');
+
+jointCarpoolingBtn.addEventListener('click', async () => {
+	// Animation d’icône
+	walletIcone.classList.add('d-none');
+	majIcone.classList.remove('d-none');
+	jointCarpoolingBtn.classList.add('vibrate');
+
+	setTimeout(() => {
+		walletIcone.classList.remove('d-none');
+		majIcone.classList.add('d-none');
+		jointCarpoolingBtn.classList.remove('vibrate');
+	}, 800);
+});
+</script>
+
+<style>
+	/* Vibration subtile */
+	@keyframes vibrate {
+		0,
+		100% {
+			transform: translate(0);
+		}
+		20% {
+			transform: translate(-2px, 2px);
+		}
+		40% {
+			transform: translate(2px, -2px);
+		}
+		60% {
+			transform: translate(-2px, -2px);
+		}
+		80% {
+			transform: translate(2px, 2px);
+		}
+	}
+	.vibrate {
+		animation: vibrate 0.25s ease-in-out;
+	}
+</style>
 
 
+
+
+
+ <script>
+	const jointCarpoolingBtn = document.getElementById('join-carpooling-btn');
+	jointCarpoolingBtn.addEventListener('click', async () => {
+		walletIcone.classList.add('d-none');
+		majIcone.classList.remove('d-none');
+	
+	  // Supprime la vibration après 1 seconde (optionnel)
+	  setTimeout(() => {
+walletIcone.classList.remove('d-none');
+
+		majIcone.classList.add('d-none');
+
+
+
+}, 1000);});</script>
 
 
  <script src="{{ asset('js/AudioPlayer.js') }}"></script>

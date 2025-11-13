@@ -7,11 +7,17 @@
 {% block body %}
 	<div
 		class="container py-4">
+    
 		{# Flash #}
 		<div id="switch-flash" class="alert alert-warning d-none mt-2"></div>
 
 		{# Bannière driver/passager #}
+
 {% include 'api/profile/components/switch_mode/_switch_mode.html.twig' %}
+{% include 'api/profile/components/picture/_picture.html.twig' %}
+
+
+
 
 
 

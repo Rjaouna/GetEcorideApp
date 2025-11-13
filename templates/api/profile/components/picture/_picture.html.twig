@@ -1,0 +1,91 @@
+<div class="container my-4">
+	<div
+		class="d-flex align-items-center justify-content-between border rounded shadow-sm p-3 bg-light">
+		<!-- Photo de profil -->
+		<div class="d-flex align-items-center">
+<img src="{{ asset('assets/images/profile/profil-avatar-homme.jpg') }}" alt="Photo de profil" class="rounded-circle border me-3" width="100" height="100" id="profilePhoto"/>
+
+
+		</div>
+
+		<!-- Bouton modifier -->
+		<div>
+			<button class="btn btn-primary d-flex align-items-center gap-2" id="btnChangePhoto">
+				<i class="bi bi-pencil-square"></i>
+				Modifier la photo
+			</button>
+			<input type="file" id="photoInput" accept="image/*" class="d-none">
+		</div>
+	</div>
+</div>
+
+ <script>
+const defaultProfileUrl = "";
+const profilePhoto = document.getElementById('profilePhoto');
+const photoInput = document.getElementById('photoInput');
+const btnChangePhoto = document.getElementById('btnChangePhoto');
+
+// 🔹 Clique sur "Modifier la photo" => ouvre le sélecteur
+btnChangePhoto.addEventListener('click', () => {
+  photoInput.click();
+});
+
+// 🔹 Quand un fichier est choisi
+photoInput.addEventListener('change', async () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('imageFile', file);
+
+  try {
+    // 👉 Il manquait le mot-clé "await" ici 👇
+    const response = await fetch("/api/profile/photo", {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      alert('❌ ' + data.error);
+      return;
+    }
+
+    console.log('✅ Réponse serveur :', data);
+
+    // 🔹 On remplace l'image par celle renvoyée par l'API
+    if (data.imageUrl) {
+      profilePhoto.src = data.imageUrl + '?t=' + new Date().getTime(); // éviter le cache navigateur
+getImageProfile()
+
+	} else if (data.imageName) {
+      profilePhoto.src = '/uploads/avatars/' + data.imageName + '?t=' + new Date().getTime();
+    } else {
+      // si aucun nom renvoyé, revenir à la photo par défaut
+      profilePhoto.src = defaultProfileUrl;
+    }
+
+  } catch (err) {
+    console.error('Erreur upload :', err);
+    alert('Erreur lors du téléversement : ' + err.message);
+  }
+});
+async function getImageProfile(){
+const profilePhoto = document.getElementById('profilePhoto');
+
+
+
+const response = await fetch("/api/profile/image");
+    const data = await response.json();
+    if (data.error) {
+      alert('❌ ' + data.error);
+      return;
+    }
+
+    console.log('✅ Réponse serveur :', data);
+profilePhoto.src = '/uploads/avatars/' + data.imageProfile;
+}
+getImageProfile()
+</script>

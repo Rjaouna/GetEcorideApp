@@ -42,8 +42,14 @@
 				{# 💰 Bloc Wallet séparé #}
 				{% if app.user %}
 					<li class="nav-item me-3">
-						<div class="d-flex align-items-center bg-success text-white rounded-pill px-3 py-1 border border-success shadow-sm" style="font-size: 0.9rem; border-color:#01D758 !important;">
-							<i class="bi bi-wallet2 me-2 text-primary"></i>
+						<div id="vivrationDiv" class="d-flex align-items-center bg-success text-white rounded-pill px-3 py-1 border border-success shadow-sm" style="font-size: 0.9rem; border-color:#01D758 !important;">
+<i class="bi bi-wallet2 me-2 text-primary  fs-4" id="walletIcone"></i>
+
+<i class="bi bi-cash-coin me-2 d-none  fs-4 text-dark" id="majIcone"></i>
+
+
+
+
 							<div class="text-start lh-1">
 								<strong id="wallet-balance" class="text-secondary">125.50 €</strong><br>
 								<small id="wallet-transactions" class="text-secondary">(0 transaction)</small>
@@ -123,6 +129,12 @@
  <script>
 	const walletBalance = document.getElementById('wallet-balance');
 	const walletTransactions = document.getElementById('wallet-transactions');
+	const vibrationDiv = document.getElementById('vivrationDiv');
+    const walletIcone = document.getElementById('walletIcone');
+    const majIcone = document.getElementById('majIcone');
+
+
+
 
 	async function getWallet() {
 		const url = "{{ path('app_api_get_wallet') }}";
@@ -134,15 +146,18 @@
 			}
 
 			const result = await response.json();
-			console.log(result);
+
+
 
 			// 🪙 Affiche le solde total formaté à 2 décimales
 			walletBalance.textContent = `${result.balance.toFixed(2)} €`;
 
 			// 💳 Si une transaction existe, affiche la dernière
-			if (result.transactions.length > 0) {
-				const lastTransaction = result.transactions[result.transactions.length - 1];
-				walletTransactions.textContent = `${lastTransaction.amount} € (${lastTransaction.type})`;
+			if (result.transactions) {
+			const lastTransaction = result.transactions;
+
+
+				walletTransactions.textContent = `Solde bloqué : ${lastTransaction} € `;
 			} else {
 				walletTransactions.textContent = "(0 transaction)";
 			}
@@ -151,6 +166,14 @@
 		}
 	}
 
-	getWallet();
+setInterval(() => {
+
+
+getWallet();
+
+
+}, 1000);
+
+
 </script>
 

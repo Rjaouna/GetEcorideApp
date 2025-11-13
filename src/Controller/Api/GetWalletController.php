@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Repository\WalletRepository;
+use App\Repository\WalletTransactionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class GetWalletController extends AbstractController
 {
     #[Route('/api/get/wallet', name: 'app_api_get_wallet')]
-    public function index(WalletRepository $wallets): Response
+    public function index(WalletRepository $wallets, WalletTransactionRepository $wallet_transaction): Response
     {
         $user = $this->getUser();
 
@@ -24,18 +25,24 @@ final class GetWalletController extends AbstractController
             return $this->json(['error' => 'Wallet not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $transactions = $wallet->getWalletTransactions();
+        $transactions = $wallet_transaction->findBy(['wallet' => $wallet]);
+
+        $totalDebit = 0;
+
+        foreach ($transactions as $transaction) {
+            if ($transaction->getType() === 'debit') {
+                // On additionne la valeur absolue pour le total
+                $totalDebit += abs($transaction->getAmount());
+            } else {
+                $totalDebit -= abs($transaction->getAmount());
+            }
+        }
+
 
         return $this->json([
             'id' => $wallet->getId(),
             'balance' => $wallet->getBalance(),
-            'transactions' => $transactions->map(function($transaction) {
-                return [
-                    'id' => $transaction->getId(),
-                    'type' => $transaction->getType(),
-                    'amount' => $transaction->getAmount(),
-                ];
-            })->toArray(),
+            'transactions' => $totalDebit,
         ]);
 
        
