@@ -429,6 +429,7 @@
 
             // VEHICLES
             renderVehicles(user.vehicles);
+            console.log(user);
 
             // CARPOOLINGS
             renderCarpools(user.carpoolings);

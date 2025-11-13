@@ -1,5 +1,7 @@
 {# Offcanvas Préférences + Profil #}
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasPrefs" aria-labelledby="offcanvasPrefsLabel" data-prefs-get="{{ path('app_api_user_preferences') }}" data-user-save="{{ path('api_me_profile_update') }}" {# PATCH profil #} data-prefs-save="{{ path('app_api_user_preferences_edit') }}" {# POST/PATCH prefs #}>
+<div class="offcanvas offcanvas-start w-100" tabindex="-1" id="offcanvasPrefs" aria-labelledby="offcanvasPrefsLabel" data-prefs-get="{{ path('app_api_user_preferences') }}" data-user-save="{{ path('api_me_profile_update') }}" {# PATCH profil #} data-prefs-save="{{ path('app_api_user_preferences_edit') }}" {# POST/PATCH prefs #}>
+
+
 	<div class="offcanvas-header">
 		<h5 class="offcanvas-title" id="offcanvasPrefsLabel">Profil & préférences</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
